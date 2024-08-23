@@ -1,34 +1,51 @@
-import pandas as pd
+import polars as pl
 import csv
+from datetime import datetime as dt
 
-df1 = pd.read_excel(
-    "Create Bundle Objects-August Cleanupv3.xlsx", sheet_name="Master File"
-)
-df2 = pd.read_csv("2023-09-28 Bundles.csv")
+# Get the current date
+current_date = dt.now()
 
+# Load the CSV files using Polars
+df1 = pl.read_csv('file1.csv')
+df2 = pl.read_csv('file2.csv')
 
+# Define the xlookup function using Polars' filtering capabilities
 def xlookup(lookup_value, lookup_array, return_array, if_not_found: str = None):
-    match_value = return_array.loc[lookup_array == lookup_value]
-
-    if match_value.empty:
+    match_value = return_array.filter(lookup_array == lookup_value)
+    if match_value.is_empty():
         return if_not_found
-
     else:
-        return match_value.tolist()[0]
+        return match_value[0]
 
+# Perform single column lookup and update 'col3'
+lookup_values = df1["col1"]
+lookup_array = df2["col1"]
+return_array = df2["col3"]
 
-df1 = df1[df1["CRM #"].notna()]
+# Apply the xlookup function to each value in lookup_values
+lookup_results = [xlookup(val, lookup_array, return_array) for val in lookup_values]
 
-df1["Bundle Type"] = df1["CRM #"].apply(
-    xlookup, args=(df2["CRM #"], df2["Bundle Type"])
-)
+# Add the results as a new column in df1
+df1 = df1.with_columns(pl.Series(name="col4", values=lookup_results))
 
-columns = ["CRM #", "Bundle Type"]
+# Select only the required columns
+columns = ["col1"]
 
-with open("users.csv", "w", newline="") as f:
+# Drop duplicates based on the specified columns
+df1 = df1.unique(subset=columns)
+
+ticket_number = 'insert Jira number here'
+output_filename = f"DS{ticket_number}_{current_date}_output.csv"
+
+# Write to CSV, skipping rows where 'col3' is null
+with open(output_filename, "w", newline="") as f:
     writer = csv.writer(f)
     writer.writerow(columns)
-    for index, row in df1.iterrows():
-        if pd.isnull(row["Bundle Type"]):
-            continue  # skip row if Bundle Type is null
-        writer.writerow([row["CRM #"], row["Bundle Type"]])
+    for row in df1.iter_rows(named=True):
+        if row["col1"] is None:
+            continue  # skip row if col3 is null
+        
+        writer.writerow([row[col] for col in columns])
+
+print('Job done')
+

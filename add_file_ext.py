@@ -6,11 +6,14 @@ import re
 # match filenames starting with string: pattern = re.compile(r'^report')
 # match filenames ending with string: pattern = re.compile(r'_2023$')
 pattern = re.compile(
-    r"^cadence_20240807"
+    r"^business"
 )  # Replace 'your_pattern_here' with your actual pattern
 
 # Get the current directory
-current_directory = os.getcwd()
+# current_directory = os.getcwd()
+
+# Set directory
+current_directory = r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\checks"
 
 # Loop through the files in the current directory
 for filename in os.listdir(current_directory):

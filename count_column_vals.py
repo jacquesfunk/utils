@@ -10,7 +10,7 @@ def count_total_rows(df):
     return len(df)
 
 
-def sort_columns_by_non_null(df: pl.DataFrame) -> list:
+def sort_columns_by_non_null(df: pl.DataFrame) -> pl.DataFrame:
     # Count non-null values for each column
     non_null_counts = df.select(
         [pl.col(col).drop_nulls().count().alias(col) for col in df.columns]
@@ -25,14 +25,22 @@ def sort_columns_by_non_null(df: pl.DataFrame) -> list:
     # Sort columns by non-null counts in descending order
     sorted_columns = sorted(sorted_columns.items(), key=lambda x: x[1], reverse=True)
 
-    return sorted_columns
+    # Convert sorted columns back to DataFrame
+    sorted_columns_df = pl.DataFrame(
+        {
+            "column": [col for col, _ in sorted_columns],
+            "count": [count for _, count in sorted_columns],
+        }
+    )
+
+    return sorted_columns_df
 
 
-def print_results(total_rows, sorted_columns, title):
+def print_results(total_rows, sorted_columns_df, title):
     print(f"Total rows: {total_rows}")
     print(f"{title}:")
-    for col, count in sorted_columns:
-        print(f"{col}: {count}")
+    for row in sorted_columns_df.iter_rows(named=True):
+        print(f"{row['column']}: {row['count']}")
 
 
 # Load datasets
@@ -44,7 +52,10 @@ df = load_data(
 total_rows_df = count_total_rows(df)
 
 # Sort columns by the number of non-null values
-sorted_columns = sort_columns_by_non_null(df)
+sorted_columns_df = sort_columns_by_non_null(df)
 
 # Print results
-print_results(total_rows_df, sorted_columns, "Counts")
+print_results(total_rows_df, sorted_columns_df, "Counts")
+
+# Save sorted columns to CSV
+sorted_columns_df.write_csv("sortedcolumns.csv")

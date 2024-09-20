@@ -43,6 +43,14 @@ df.group_by("d", maintain_order=True).n_unique()
 ## Update dataset
 
 ```
+# Add blank columns to dataframe
+df_final = df_select.with_columns(
+    [
+        pl.Series("schema_name", [None] * df.height),
+        pl.Series("tables_used", [None] * df.height),
+    ]
+)
+
 # Add columns to dataframe by passing a list of expressions
 df.with_columns(
     [

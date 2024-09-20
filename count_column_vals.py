@@ -45,7 +45,7 @@ def print_results(total_rows, sorted_columns_df, title):
 
 # Load datasets
 df = load_data(
-    r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\dim_fuelcard_202409191058.csv"
+    r"C:\Users\mahmad\OneDrive - Ryan RTS\1- Projects\dim_fuelcard_202409191058.csv"
 )
 
 # Count total rows in each DataFrame
@@ -56,6 +56,7 @@ sorted_columns_df = sort_columns_by_non_null(df)
 
 # Print results
 print_results(total_rows_df, sorted_columns_df, "Counts")
+print(df.count())
 
 # Save sorted columns to CSV
 sorted_columns_df.write_csv("sortedcolumns.csv")

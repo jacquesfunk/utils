@@ -15,6 +15,20 @@ SELECT order_id, customer_id, COUNT(*)
 FROM orders
 GROUP BY order_id, customer_id
 HAVING COUNT(*) > 1;
+
+# Removing leading zeroes
+SELECT 
+    CAST(employee_id AS INT) AS employee_id_cleaned, 
+    employee_name 
+FROM 
+    employees;
+
+# Removing leading zeroes if the column contains alphanumeric or decimal values
+SELECT 
+    LTRIM(employee_id, '0') AS employee_id_cleaned, 
+    employee_name 
+FROM 
+    employees;
 ```
 
 # Data analysis

@@ -38,6 +38,28 @@ df.count()
 
 # Count unique values in each group
 df.group_by("d", maintain_order=True).n_unique()
+
+# window function
+orders = pl.scan_csv("orders.csv")
+customers = pl.scan_csv("customers.csv")
+
+orders_w_order_rank_column = (
+    orders
+    .join(customers, on="customer_id", how="left")
+    .with_columns([
+        pl.col("order_date_utc").rank()
+        .over(pl.col("is_premium_customer"))
+        .alias("order_rank")
+    ])
+)
+
+(
+    orders_w_order_rank_column
+    .filter(pl.col("order_rank").le(2))
+    .group_by(pl.col("is_premium_customer"))
+    .agg(pl.col("order_value_usd").sum().name.prefix("sum_"))
+    .collect()
+)
 ```
 
 ## Update dataset
@@ -51,6 +73,17 @@ df_final = df_select.with_columns(
     ]
 )
 
+# Create new columns
+
+    # create year column by extracting year from date column
+    df_pl = df_pl.with_columns(pl.col("sales_date").dt.year().alias("year"))
+
+    # create price column by dividing sales revenue by sales quantity
+    df_pl = df_pl.with_columns((pl.col("sales_rev") / pl.col("sales_qty")).alias("price"))
+
+    # create a column with a constant value
+    df_pl = df_pl.with_columns(pl.lit(0).alias("dummy_column"))
+
 # Add columns to dataframe by passing a list of expressions
 df.with_columns(
     [
@@ -60,6 +93,9 @@ df.with_columns(
     ]
 )
 
+# Sort by one column
+df.sort('A')
+
 # Sort by multiple columns
 df.sort("c", "a", descending=[False, True])
 
@@ -68,6 +104,9 @@ df.columns = ["apple", "banana", "orange"]
 
 # Fill floating point NaN value with a fill value
 df.with_columns(pl.col("b").fill_nan(0))
+
+# Fill all na's
+df.fill_none(value)
 
 # Filter the expression based on one or more predicate expressions.
 # The original order of the remaining elements is preserved.
@@ -94,6 +133,13 @@ df.rename({"foo": "apple"})
 
 # Add column showing % change between rows
 df.with_columns(pl.col("a").pct_change().alias("pct_change"))
+
+# Choose columns to include in output
+# single
+df.select('A')
+
+# double
+df.select('A', 'B')
 
 # Sum multiple columns
 df.select(pl.sum("a", "c"))
@@ -124,11 +170,104 @@ filtered_df = df.with_columns([
     pl.col("physphonenbr").cast(pl.Int64),
     pl.col("trucknbr").cast(pl.Int64)
 ])
+
+# change the data type of sales date from string to date
+df_pl = df_pl.with_columns(pl.col("sales_date").str.to_date())
+
+# merge 2 datasets
+df1.join(df2, on='key')
+
+# merge >2 datasets
+df1.join(df2, on='key').join(df3, on='key')
+
+# concatenate dataframes
+pl.concat([df1, df2])
+
+# Sort columns
+df.select(sorted(df.columns))
+
+# Sort columns in reverse order
+df.select(sorted(df.columns, reverse=True))
+
+# Select columns based on headers
+q = (
+    pl.scan_csv('Titanic_train.csv')
+    .select(
+        ['Name','Age']
+    )
+)
+q.collect()
+
+# Exclude only one column
+q = (
+    pl.scan_csv('Titanic_train.csv')
+    .select(
+        pl.exclude('PassengerId')
+    )
+)
+q.collect()
+
+# Select columns based on string
+
+q = (
+    pl.scan_csv('Titanic_train.csv')
+    .select(
+        pl.col('^S.*$')  # get all columns that starts with S
+    )
+)
+q.collect()
+
+# Split columns
+# Part 1
+q = (
+    pl.scan_csv('names.csv')
+    .select(
+    [
+        'name',
+        pl.col('name').str.split(' ').alias('splitname'),
+        'age',
+    ])
+)
+q.collect()
+
+# Part 2
+q = (
+    pl.scan_csv('names.csv')
+    .select(
+    [
+        'name',
+        pl.col('name').str.split(' ').alias('split_name'),
+        'age',
+    ])
+    .with_column(
+        pl.struct(
+            [
+                pl.col('split_name').arr.get(i).alias(
+                    'first_name' if i==0 else 'last_name') 
+                for i in range(2)
+            ]
+        ).alias('split_name')
+    )
+)
+q.collect()
 ```
 
 ## Categorical Filters and queries 
 
 ```
+# basic filters
+    # sales quantity is more than 0
+    df_pl.filter(pl.col("sales_qty") > 0)
+
+    # store code is B1
+    df_pl.filter(pl.col("store_code") == "B1")
+
+    # sales quantity is more than 0 and store code is A2
+    df_pl.filter((pl.col("store_code") == "A2") & (pl.col("sales_qty") > 0))
+
+    # product code is one of the following: 89909, 89912, 89915, 89918
+    df_pl.filter(pl.col("product_code").is_in([89909, 89912, 89915, 89918]))
+
 # Replace all matching regex/literal substrings with a new string value
 df.with_columns(pl.col("text").str.replace_all("a", "-"))
 
@@ -183,6 +322,27 @@ for name, data in df.group_by(["foo"]):
     print(name)
     print(data)
 
+# Basic group by functions
+    # calculate total and average sales for each store
+    df_pl.group_by(["store_code"]).agg(
+        pl.sum("sales_qty").alias("total_sales"),
+        pl.mean("sales_qty").alias("avg_sales")
+    )
+
+    # calculate total and average sales for each store-year pair
+    df_pl.group_by(["store_code", "year"]).agg(
+        pl.sum("sales_qty").alias("total_sales"),
+        pl.mean("sales_qty").alias("avg_sales")
+    )
+
+    # create product lifetime and unique day count for each product
+    df_pl.group_by(["product_code"]).agg(
+        [
+            pl.n_unique("sales_date").alias("unique_day_count"),
+            ((pl.max("sales_date") - pl.min("sales_date")).dt.total_days() + 1).alias("lifetime")
+        ]
+    )
+
 # Compute aggregations for each group of a group by operation
 df.group_by("a").agg(pl.col("b"), pl.col("c"))
 
@@ -230,6 +390,11 @@ df.with_columns(
 ```
 # Return pairwise Pearson product-moment correlation coefficients between columns. Requires numpy to be installed.
 df.corr()
+```
+
+## Lambda functions
+```
+df.with_column(pl.col('A').apply(lambda x: x*2))
 ```
 
 #  Pandas
@@ -592,4 +757,159 @@ print(C) # ['a', 'g', 'b', 'c', 'd', 'h', 'i', 'e', 'f', 'j', 'k']
 with open('myfile.txt') as file:
     while (line := file.readline().rstrip()):
         print(line)
+
+# Lambda functions
+# filter
+bricks = ["red", "blue", "red", "blue", "red", "blue"]
+red_bricks = filter(lambda x: x == 'red', bricks)
+print(len(list(bricks)))  # Output: 3
+
+# map
+bricks = ["red", "blue", "red", "blue", "red", "blue"]
+green_bricks = map(lambda x: "green", bricks)
+print(len(list(green_bricks)))  # Output: 6
+
+# Data validation with enums
+from enum import Enum
+
+class UserRole(Enum):
+    ADMIN = "admin"
+    EDITOR = "editor"
+    VIEWER = "viewer"
+
+def assign_role(role: UserRole):
+    if not isinstance(role, UserRole):
+        raise ValueError(f"Invalid role: {role}")
+    print(f"Role assigned: {role.name}")
+```
+
+# Logging
+
+```
+import logging
+
+# Create a logger
+logger = logging.getLogger(__name__)
+
+# Set the logging level
+logger.setLevel(logging.DEBUG)
+
+# Create a file handler and set the logging level
+file_handler = logging.FileHandler('app.log')
+file_handler.setLevel(logging.DEBUG)
+
+# Create a console handler and set the logging level
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+
+# Create a formatter and add it to the handlers
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+console_handler.setFormatter(formatter)
+
+# Add the handlers to the logger
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
+
+# Example usage
+logger.debug('This is a debug message')
+logger.info('This is an info message')
+logger.warning('This is a warning message')
+logger.error('This is an error message')
+logger.critical('This is a critical message')
+
+# Here’s an example of how to configure logging using a configuration file (logging.conf):
+
+[loggers]
+keys=root
+
+[handlers]
+keys=consoleHandler,fileHandler
+
+[formatters]
+keys=simpleFormatter
+
+[logger_root]
+level=DEBUG
+handlers=consoleHandler,fileHandler
+
+[handler_consoleHandler]
+class=StreamHandler
+level=INFO
+formatter=simpleFormatter
+args=(sys.stdout,)
+
+[handler_fileHandler]
+class=FileHandler
+level=DEBUG
+formatter=simpleFormatter
+args=('app.log',)
+
+[formatter_simpleFormatter]
+format=%(asctime)s - %(name)s - %(levelname)s - %(message)s
+To use this configuration file in your Python code, you can do the following:
+
+import logging
+import logging.config
+
+# Load the logging configuration from the file
+logging.config.fileConfig('logging.conf')
+
+# Get the logger
+logger = logging.getLogger(__name__)
+
+# Example usage
+logger.debug('This is a debug message')
+logger.info('This is an info message')
+logger.warning('This is a warning message')
+logger.error('This is an error message')
+logger.critical('This is a critical message')
+```
+
+# File manipulation
+
+```
+from pathlib import Path
+
+# Create a Path object
+path = Path('/path/to/directory')
+
+# Access parts of the path
+print(path.name)       # 'directory'
+print(path.parent)     # '/path/to'
+print(path.suffix)     # ''
+
+# Join paths
+path = Path('/path/to')
+new_path = path / 'directory' / 'file.txt'
+
+# Checking if path exits 
+if path.exists():
+    print("The file exists")
+else:
+    print("The file does not exist")
+
+# Reading from a file
+path = Path('/path/to/file.txt')
+content = path.read_text()
+print(content)
+
+# Listing Directory Contents
+for file in path.iterdir():
+    print(file)
+```
+
+# Generators
+
+```
+# Computes values only when needed, saving memory and processing time, especially with large datasets
+def process_logs(filename):
+    with open(filename) as file:
+        for line in file:
+            if "ERROR" in line:
+                yield line
+
+# Using a generator to process logs lazily
+for log in process_logs("server.log"):
+    print(log)
 ```

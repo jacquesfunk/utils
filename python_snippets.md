@@ -668,7 +668,6 @@ a.transpose()
 np.sort(a) ## sort based on rows
 np.sort(a, axis=None) ## sort the flattened array
 np.sort(a, axis=0) ## sort based on columns
-
 ```
 
 # Regular expressions

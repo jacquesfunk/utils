@@ -48,6 +48,12 @@ SELECT
     END AS SaleLevel
 FROM Sales;
 
+# Get random sample of data
+SELECT column1, column2
+FROM table_name
+ORDER BY RAND()
+LIMIT 100;
+
 # Window function to find duplicate rows
 WHERE id IN (
 SELECT id
@@ -183,6 +189,7 @@ SELECT p.product_name, p.category_id,
    JOIN tags t ON pt.tag_id = t.tag_id
    WHERE pt.product_id = p.product_id) AS tags
 FROM products p;
+
 ```
 # Dates
 ```
@@ -193,6 +200,15 @@ SELECT TIMESTAMPDIFF(MINUTE, start_time, end_time) AS duration_minutes;
 ```
 # Redshift specific
 ```
+# Group by rollup function
+SELECT createddate::date
+	,"type" 
+	,COUNT(id) AS total_quantity
+FROM crm.rpl_task
+WHERE status = 'System Closed'
+GROUP BY ROLLUP(createddate, "type")
+ORDER BY total_quantity DESC;
+
 # Pivot
 SELECT
   id, 

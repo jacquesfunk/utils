@@ -124,6 +124,25 @@ result = df1.append([df2, df3])
 frames = [df1, df2, df3]
 result = pd.concat(frames)
 
+# directional merge
+merged_df = names.merge(scores, on="id", how="left")
+
+# merge on multiple columms
+merged_df = products.merge(sales, on=["pg", "id"])
+
+# merge with indicator; shows where values come from
+merged_df = names.merge(scores, on="id", how="outer", indicator=True)
+
+# merge with indicator; shows where values come from and sets name of indicator column
+merged_df = names.merge(scores, on="id", how="left", indicator="source")
+
+# merge and group by column
+merged_df = pd.merge_asof(df1, df2, on="time", by="group")
+
+# ordered merge
+merged_df = pd.merge_ordered(df1, df2)
+
+
 # Drop columns from df
 df = df.drop(columns=["Unnamed: 0", "weak_foot", "real_face"])
 

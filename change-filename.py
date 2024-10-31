@@ -2,7 +2,7 @@ import os
 import re
 
 # Specify the directory you want to rename files in
-directory = r"C:\Users\mahmad\OneDrive - Ryan RTS\projects"
+directory = r"C:\Users\mahmad\OneDrive - Ryan RTS\resources"
 
 # Function to add dashes before letters, remove special characters, and replace whitespace with dashes
 def add_dashes(name):

@@ -29,6 +29,21 @@ date_today = dt.now()
 # capitalize text
 capitalized_text = text.capitalize()
 
+# find most common element in a list
+from collections import Counter
+
+lst = [1, 2, 2, 3, 3, 3, 4]
+most_common = Counter(lst).most_common(1)[0][0]
+
+# get unique elements in list
+lst = [1, 2, 2, 3, 3, 4]
+unique_lst = list(set(lst))
+
+# shuffle list
+import random
+lst = [1, 2, 3, 4]
+random.shuffle(lst)
+
 # generate a GUID
 import uuid
 guid = uuid.uuid4()

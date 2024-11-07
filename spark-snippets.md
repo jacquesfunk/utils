@@ -1,4 +1,4 @@
-# General Python code snippets
+# PySpark code snippets
 
 ## EDA
 

@@ -39,7 +39,7 @@ def merge_json_files(directory, output_file, non_json_file):
         json.dump(merged_data, outfile, indent=4)
 
 
-directory = r"C:\Users\mahmad\OneDrive - Ryan RTS\1- Projects\Python"
-output_file = "merged_output.json"
-non_json_file = "non_json_content.txt"
+directory = r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\json"
+output_file = r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\merged_output.json"
+non_json_file = r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\non_json_content.txt"
 merge_json_files(directory, output_file, non_json_file)

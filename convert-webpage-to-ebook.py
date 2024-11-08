@@ -16,4 +16,6 @@ def create_ebook(url, book_title):
     book.spine = ['nav', chapter]
     epub.write_epub(f'{book_title}.epub', book, {})
 
-create_ebook('https://example.com/your-favorite-article', 'My eBook')
+ebook_url = input('Enter URL:')
+ebook_title = input('Enter title:')
+create_ebook(ebook_url, ebook_title)

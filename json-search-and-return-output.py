@@ -1,10 +1,11 @@
 import os
 import json
+import csv
 
-def search_json_files(directory, search_string):
+def search_json_files(directory, search_string, output_csv):
     found_json = False  # Flag to track if any JSON files are found
     found_match = False  # Flag to track if any match is found
-    matches = {}  # Dictionary to store matches with file paths as keys
+    matches = []  # List to store matches as dictionaries for CSV writing
 
     # List all files and directories in the specified directory
     for root, dirs, files in os.walk(directory):
@@ -27,9 +28,8 @@ def search_json_files(directory, search_string):
                                     # If data is a dictionary
                                     for key in data.keys():
                                         if isinstance(data[key], str) and search_string in data[key]:
-                                            if file_path not in matches:
-                                                matches[file_path] = []
-                                            matches[file_path].append(f"{key}: {data[key]}")
+                                            match = {"file": file_path, "key": key, "value": data[key]}
+                                            matches.append(match)
                                             found_match = True
                                 elif isinstance(data, list):
                                     # If data is a list
@@ -37,9 +37,8 @@ def search_json_files(directory, search_string):
                                         if isinstance(item, dict):
                                             for key in item.keys():
                                                 if isinstance(item[key], str) and search_string in item[key]:
-                                                    if file_path not in matches:
-                                                        matches[file_path] = []
-                                                    matches[file_path].append(f"{key}: {item[key]}")
+                                                    match = {"file": file_path, "key": key, "value": item[key]}
+                                                    matches.append(match)
                                                     found_match = True
                             except json.JSONDecodeError:
                                 # Skip over non-JSON parts of the file
@@ -52,13 +51,20 @@ def search_json_files(directory, search_string):
     elif not found_match:
         print("Search term not found")
     else:
-        # Print the matches
-        for file, lines in matches.items():
-            print(f"\nMatches found in file: {file}")
-            for line in lines:
-                print(line)
+        # Print matches to the console
+        for match in matches:
+            print(f"Found match in file: {match['file']} | Key: {match['key']} | Value: {match['value']}")
+        
+        # Write matches to CSV
+        with open(output_csv, 'w', newline='') as csvfile:
+            fieldnames = ["file", "key", "value"]
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(matches)
+        print(f"\nMatches saved to {output_csv}")
 
 # Example usage
 search_directory = "."  # Current directory
 search_term = "3870948"
-search_json_files(search_directory, search_term)
+output_file = "matches.csv"
+search_json_files(search_directory, search_term, output_file)

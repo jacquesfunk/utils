@@ -39,6 +39,12 @@ awk '(NR==FNR){a[$0]=1;next}
      (FNR==1){ for(i in a) if(a[i]) {a[i]=0} else {delete a[i]} }
      ($0 in a) { a[$0]=1 }
      END{for (i in a) if (a[i]) print i}' file1 file2 file3 ... file200
+     
+# filtering rows based on a condition
+awk '$4 > 169' data.txt
+
+# printing lines containing specific word
+awk '/John/' data.txt
 
 ```
 

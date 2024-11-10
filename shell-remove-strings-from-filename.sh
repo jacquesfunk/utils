@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Directory path containing the files
+# Get the current directory where the script is run
 directory_path="$1"
 
 # Iterate over each file in the directory
@@ -13,8 +13,8 @@ for filepath in "$directory_path"/*; do
     # Extract the filename from the path
     filename=$(basename "$filepath")
 
-    # Convert filename to lowercase, replace whitespace with dashes, and remove commas and apostrophes
-    new_filename=$(echo "$filename" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | tr '_' '-' | tr -d ',\()' | sed "s/playboy's/playboys/g")
+    # Remove the string 'playboy_usa_' and change underscores to dashes
+    new_filename=$(echo "$filename" | sed 's/playboy_usa_//g' | tr '_' '-')
 
     # Rename the file
     new_filepath="$directory_path/$new_filename"

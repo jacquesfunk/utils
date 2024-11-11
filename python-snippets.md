@@ -136,6 +136,17 @@ def assign_role(role: UserRole):
     if not isinstance(role, UserRole):
         raise ValueError(f"Invalid role: {role}")
     print(f"Role assigned: {role.name}")
+
+# calculate exponent
+print(pow(2, 2))
+
+# add numbers
+numbers = [1, 2, 3, 4, 5]
+
+total = sum(numbers)
+
+print(total)
+
 ```
 
 # Logging

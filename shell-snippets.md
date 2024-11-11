@@ -46,6 +46,37 @@ awk '$4 > 169' data.txt
 # printing lines containing specific word
 awk '/John/' data.txt
 
+# Find dupe files
+# Create the SQLite database and table
+sqlite3 files.db "CREATE TABLE files (path TEXT, md5 TEXT, mod_date TEXT);"
+
+# Import the CSV data into the SQLite table
+sqlite3 files.db <<EOF
+.mode csv
+.import output.csv files
+EOF
+
+# Query the database for duplicates and sort the results
+sqlite3 files.db <<EOF
+.mode csv
+.output duplicates_sorted.csv
+SELECT path, md5, mod_date
+FROM files
+WHERE md5 IN (
+    SELECT md5
+    FROM files
+    GROUP BY md5
+    HAVING COUNT(md5) > 1
+)
+ORDER BY md5, mod_date;
+EOF
+
+# look at csv results
+cat duplicates_sorted.csv
+
+# Remove duplicate lines and save the rest into a new file
+awk ‘!seen[$0]++’ filename > newfile
+
 ```
 
 # jq
@@ -116,5 +147,24 @@ setopt EXTENDED_GLOB
 ls *(.) - List only regular files.
 ls *(/) - List only directories.
 ls *(-/) - List only directories and symbolic links to directories.
+
+```
+
+### find
+
+```
+
+# find all gif files in a dir or subdir 
+find . -type f -name '*.gif' -exec sh -c \
+'file "$0" | grep -q "animated"' {} \; -print
+
+```
+
+### wordcount
+
+```
+
+# count number of lines in file
+wc -l filename
 
 ```

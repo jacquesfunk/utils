@@ -109,6 +109,9 @@ ls **/*.txt
 shopt -s extglob
 rm !(*.txt)
 
+# combine pdfs
+pdftk file1.pdf file2.pdf cat output combined.pdf
+
 ```
 
 # zsh

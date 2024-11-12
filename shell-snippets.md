@@ -1,8 +1,10 @@
-# awk
+# Linux
+
+## awk
 
 ```
 
-# write only 1st and 2nd column of file, using white space as delimiter
+## write only 1st and 2nd column of file, using white space as delimiter
 awk '{print $1, $2}' log.txt
 
 # set delimiter when choosing columns
@@ -53,7 +55,7 @@ awk ‘!seen[$0]++’ filename > newfile
 
 ```
 
-# bash
+## bash
 
 ```
 
@@ -74,7 +76,106 @@ pdftk file1.pdf file2.pdf cat output combined.pdf
 
 ```
 
-# cmd
+## jq
+
+```
+
+# parse 
+for file in *.json; do
+    jq 'select(.SalesforceResponse != null) | del(.salesforce_response_metrics, .input_file) | .SalesforceResponse as $sf | del(.SalesforceResponse) | . + $sf' "$file" > "filtered_$file"
+done
+
+# convert to csv
+jq -r '(.[0] | keys_unsorted) as $keys | $keys, map([.[ $keys[] ]])[] | @csv' filtered_*.json > combined_output.csv
+
+```
+
+## sed
+
+```
+
+#remove double quotes from title tag
+sed -i.bak 's/^title: "\([^"]*\)"/title: \1/' *.md
+sed -i.bak 's/^date: "\([^"]*\)"/title: \1/' *.md
+rm *.bak
+
+#Add new line to front matter
+sed -i.bak '/^tags:/a\
+layout: post
+' *.md
+
+# To remove bak files
+rm *.bak
+
+# substituting string with replacement in file.txt
+sed 's/old/new/' file.txt
+
+# convert all lowercase letters to uppercase in textfile.txt
+sed 's/.*/\U&/' textfile.txt
+
+```
+
+## zsh
+
+### Globbing
+
+#### regular
+```
+# Match all .txt files in the current directory
+*.txt
+
+# Match files like file1.txt, file2.txt, etc., in the current directory
+file?.txt
+
+# Match all .txt files recursively within directories
+**/*.txt
+
+# move all jpg and png files to specific dir
+cp *.{jpg,png} images/
+
+# Change the extension of filename from .txt to .md
+${filename%.txt}.md
+
+# Convert a filename variable to lowercase
+${file:l}
+```
+
+#### extended globbing
+
+```
+
+Enable extended globbing with the following command:
+
+setopt EXTENDED_GLOB
+
+ls *(.) - List only regular files.
+ls *(/) - List only directories.
+ls *(-/) - List only directories and symbolic links to directories.
+
+```
+
+#### find
+
+```
+
+# find all gif files in a dir or subdir 
+find . -type f -name '*.gif' -exec sh -c \
+'file "$0" | grep -q "animated"' {} \; -print
+
+```
+
+#### wordcount
+
+```
+
+# count number of lines in file
+wc -l filename
+
+```
+
+# Windows
+
+## cmd
 
 ```
 
@@ -122,99 +223,44 @@ ping
 
 ```
 
-# jq
+## powershell
 
 ```
 
-# parse 
-for file in *.json; do
-    jq 'select(.SalesforceResponse != null) | del(.salesforce_response_metrics, .input_file) | .SalesforceResponse as $sf | del(.SalesforceResponse) | . + $sf' "$file" > "filtered_$file"
-done
+# split strings
+("Hello world").split("ll"" ")
 
-# convert to csv
-jq -r '(.[0] | keys_unsorted) as $keys | $keys, map([.[ $keys[] ]])[] | @csv' filtered_*.json > combined_output.csv
+# extract substrings
+("Hello world").Substring(2,5)
 
-```
+# replace string with another string
+("Hello World").Replace("Hello","New")
 
-# sed
+# compare string
+("Hello world").CompareTo("Hello" + " " + "world")
 
-```
+# show date
+Get-Date -Format "dd-MM-yyyy"
 
-#remove double quotes from title tag
-sed -i.bak 's/^title: "\([^"]*\)"/title: \1/' *.md
-sed -i.bak 's/^date: "\([^"]*\)"/title: \1/' *.md
-rm *.bak
+# add to date
+(Get-Date).AddDays(-1)
 
-#Add new line to front matter
-sed -i.bak '/^tags:/a\
-layout: post
-' *.md
+# all add to date functions
+$today = Get-Date  # dinsdag 6 december 2022 16:28:51
+$today.AddYears(2).AddMonths(3).AddDays(1).AddHours(2).AddMinutes(10)
 
-# To remove bak files
-rm *.bak
+# get time between dates
+$today = Get-Date
+$Christmas = Get-Date -day 25 -month 12
+New-TimeSpan -Start $today -End $christmas
 
-# substituting string with replacement in file.txt
-sed 's/old/new/' file.txt
+# show calendar
+get-calendar
 
-# convert all lowercase letters to uppercase in textfile.txt
-sed 's/.*/\U&/' textfile.txt
+# display tree structure of dir
+tree
 
-```
-
-# zsh
-
-## Globbing
-
-### regular
-```
-# Match all .txt files in the current directory
-*.txt
-
-# Match files like file1.txt, file2.txt, etc., in the current directory
-file?.txt
-
-# Match all .txt files recursively within directories
-**/*.txt
-
-# move all jpg and png files to specific dir
-cp *.{jpg,png} images/
-
-# Change the extension of filename from .txt to .md
-${filename%.txt}.md
-
-# Convert a filename variable to lowercase
-${file:l}
-```
-
-### extended globbing
-
-```
-
-Enable extended globbing with the following command:
-
-setopt EXTENDED_GLOB
-
-ls *(.) - List only regular files.
-ls *(/) - List only directories.
-ls *(-/) - List only directories and symbolic links to directories.
-
-```
-
-### find
-
-```
-
-# find all gif files in a dir or subdir 
-find . -type f -name '*.gif' -exec sh -c \
-'file "$0" | grep -q "animated"' {} \; -print
-
-```
-
-### wordcount
-
-```
-
-# count number of lines in file
-wc -l filename
+# compare files
+compare-object (get-content one.txt) (get-content two.txt)
 
 ```

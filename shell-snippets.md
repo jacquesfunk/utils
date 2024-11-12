@@ -1,29 +1,3 @@
-# sed
-
-```
-
-#remove double quotes from title tag
-sed -i.bak 's/^title: "\([^"]*\)"/title: \1/' *.md
-sed -i.bak 's/^date: "\([^"]*\)"/title: \1/' *.md
-rm *.bak
-
-#Add new line to front matter
-sed -i.bak '/^tags:/a\
-layout: post
-' *.md
-
-# To remove bak files
-rm *.bak
-
-# substituting string with replacement in file.txt
-sed 's/old/new/' file.txt
-
-# convert all lowercase letters to uppercase in textfile.txt
-sed 's/.*/\U&/' textfile.txt
-
-```
-
-
 # awk
 
 ```
@@ -79,20 +53,6 @@ awk ‘!seen[$0]++’ filename > newfile
 
 ```
 
-# jq
-
-```
-
-# parse 
-for file in *.json; do
-    jq 'select(.SalesforceResponse != null) | del(.salesforce_response_metrics, .input_file) | .SalesforceResponse as $sf | del(.SalesforceResponse) | . + $sf' "$file" > "filtered_$file"
-done
-
-# convert to csv
-jq -r '(.[0] | keys_unsorted) as $keys | $keys, map([.[ $keys[] ]])[] | @csv' filtered_*.json > combined_output.csv
-
-```
-
 # bash
 
 ```
@@ -111,6 +71,93 @@ rm !(*.txt)
 
 # combine pdfs
 pdftk file1.pdf file2.pdf cat output combined.pdf
+
+```
+
+# cmd
+
+```
+
+# compare two files and print lines with diffs
+FC file1.ext file2.ext
+
+# compare multiple files
+comp log1.txt log2.txt log3.txt
+
+# find all lines with search term in a file
+find "type" header-compare.csv
+
+# sort file
+sort sample.txt
+
+# view contents page by page
+more long_text.txt
+
+# clear screen
+cls
+
+# display or set date
+date
+
+# rename files
+ren header-compare-PC-010536.csv header-compare-saved.csv
+
+# display or set time
+time
+
+# move files from one dir to another
+move 
+
+# display tree structure of dir
+tree
+
+# display all active system tasks
+tasklist
+
+# kill active system task by calling the task id
+taskkill /pid 1234
+
+# test system connectivity
+ping
+
+```
+
+# jq
+
+```
+
+# parse 
+for file in *.json; do
+    jq 'select(.SalesforceResponse != null) | del(.salesforce_response_metrics, .input_file) | .SalesforceResponse as $sf | del(.SalesforceResponse) | . + $sf' "$file" > "filtered_$file"
+done
+
+# convert to csv
+jq -r '(.[0] | keys_unsorted) as $keys | $keys, map([.[ $keys[] ]])[] | @csv' filtered_*.json > combined_output.csv
+
+```
+
+# sed
+
+```
+
+#remove double quotes from title tag
+sed -i.bak 's/^title: "\([^"]*\)"/title: \1/' *.md
+sed -i.bak 's/^date: "\([^"]*\)"/title: \1/' *.md
+rm *.bak
+
+#Add new line to front matter
+sed -i.bak '/^tags:/a\
+layout: post
+' *.md
+
+# To remove bak files
+rm *.bak
+
+# substituting string with replacement in file.txt
+sed 's/old/new/' file.txt
+
+# convert all lowercase letters to uppercase in textfile.txt
+sed 's/.*/\U&/' textfile.txt
 
 ```
 

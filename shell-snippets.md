@@ -271,14 +271,11 @@ ping
 # compare string
 ("Hello world").CompareTo("Hello" + " " + "world")
 
-# show date
+# format date
 Get-Date -Format "dd-MM-yyyy"
 
-# add to date
-(Get-Date).AddDays(-1)
-
 # all add to date functions
-$today = Get-Date  # dinsdag 6 december 2022 16:28:51
+$today = Get-Date
 $today.AddYears(2).AddMonths(3).AddDays(1).AddHours(2).AddMinutes(10)
 
 # get time between dates
@@ -299,6 +296,7 @@ compare-object (get-content one.txt) (get-content two.txt)
 Get-ChildItem -Path "C:\Users\user\first - second" -Recurse |
     Where-Object { $_.LastWriteTime -gt (Get-Date).AddDays(-7) }
     
+
 ```
 
 ### json

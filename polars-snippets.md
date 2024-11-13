@@ -388,3 +388,11 @@ df.with_columns(
     pl.col("c").min().over(["a", "b"]).name.suffix("_min"),
 )
 ```
+
+## Lambda functions
+
+```
+
+df.with_column(pl.col('A').apply(lambda x: x*2))
+
+```

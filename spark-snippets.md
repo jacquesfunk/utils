@@ -6,6 +6,9 @@
 # loading file
 df = spark.read.load("/home/rahul/projects/sparkdf/coronavirusdataset/Case.csv",format="csv", sep=",", inferSchema="true", header="true")
 
+# provides a detailed, verbose output of the query plan
+df.explain(true)
+
 # read JSON
 dataframe = sc.read.json('dataset/nyt2.json')
 

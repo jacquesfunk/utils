@@ -8,7 +8,16 @@ df.corr()
 
 ## Lambda functions
 ```
-df.with_column(pl.col('A').apply(lambda x: x*2))
+
+# filter
+bricks = ["red", "blue", "red", "blue", "red", "blue"]
+red_bricks = filter(lambda x: x == 'red', bricks)
+print(len(list(bricks)))  # Output: 3
+
+# map
+bricks = ["red", "blue", "red", "blue", "red", "blue"]
+green_bricks = map(lambda x: "green", bricks)
+print(len(list(green_bricks)))  # Output: 6
 ```
 
 # Regular expressions
@@ -113,16 +122,6 @@ with open('myfile.txt') as file:
     while (line := file.readline().rstrip()):
         print(line)
 
-# Lambda functions
-# filter
-bricks = ["red", "blue", "red", "blue", "red", "blue"]
-red_bricks = filter(lambda x: x == 'red', bricks)
-print(len(list(bricks)))  # Output: 3
-
-# map
-bricks = ["red", "blue", "red", "blue", "red", "blue"]
-green_bricks = map(lambda x: "green", bricks)
-print(len(list(green_bricks)))  # Output: 6
 
 # Data validation with enums
 from enum import Enum
@@ -235,9 +234,26 @@ logger.critical('This is a critical message')
 # File manipulation
 
 ```
-from pathlib import Path
+# getting all of a specific file type from a directory
+import glob
+
+# append multiple csvs
+import csv
+
+combined_data = []
+
+for file in file_paths:
+    with open(file, mode='r') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            combined_data.append(row)
+
+
+file_paths = glob.glob('path/to/csv/files/*.csv')
 
 # Create a Path object
+from pathlib import Path
+
 path = Path('/path/to/directory')
 
 # Access parts of the path

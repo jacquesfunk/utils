@@ -53,14 +53,42 @@ cat duplicates_sorted.csv
 # Remove duplicate lines and save the rest into a new file
 awk ‘!seen[$0]++’ filename > newfile
 
+# vlookup
+join -t, <(sort -nst, -k1,1 File2.csv) <(sort -nst, -k1,1 File1.csv)
+
 ```
+
 
 ## bash
 
 ```
 
+# read pdfs
+acroread /a "page=NUM & zoom=NUM
+
+# compare 2 files
+comm file1.txt file2.txt
+
+# find files by prefix
+compgen -f fzf
+
 # compares the sorted versions of two files without creating intermediate files
 diff <(sort file1.txt) <(sort file2.txt)
+
+# finding files by name
+find /path/to/search -name treasure
+
+# finding files by name, case insensitive
+find /path/to/search -iname treasure
+
+# find by size
+find /path/to/search -type f -size +1G -size -100G
+
+# find file by days since last modified
+find /path/to/search -mtime -7
+
+# find files modified in specific month
+find /path/to/search -type f -newermt "2024-10-01" ! -newermt "2024-11-01"
 
 # enable globstar and list all text files in dirs and subdirs
 shopt -s globstar
@@ -73,6 +101,9 @@ rm !(*.txt)
 
 # combine pdfs
 pdftk file1.pdf file2.pdf cat output combined.pdf
+
+# remove duplicate lines in file.txt
+sort file.txt | uniq 
 
 ```
 
@@ -225,6 +256,7 @@ ping
 
 ## powershell
 
+### misc
 ```
 
 # split strings
@@ -262,5 +294,28 @@ tree
 
 # compare files
 compare-object (get-content one.txt) (get-content two.txt)
+
+# find files modified in last 7 days
+Get-ChildItem -Path "C:\Users\user\first - second" -Recurse |
+    Where-Object { $_.LastWriteTime -gt (Get-Date).AddDays(-7) }
+    
+```
+
+### json
+
+```
+
+# import json
+$jsonData = Get-Content -Path “C:\path\to\your\data.json” -Raw | ConvertFrom-Json
+
+# iterate through array
+foreach ($service in $services) {
+Write-Host “Service: $service”}
+
+# export json
+$jsonString | Set-Content -Path “C:\path\to\your\newdata.json”
+
+# filter json
+$filteredServices = $jsonData.Services | Where-Object { $_ -like “*Server*” }
 
 ```

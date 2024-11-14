@@ -296,7 +296,9 @@ compare-object (get-content one.txt) (get-content two.txt)
 Get-ChildItem -Path "C:\Users\user\first - second" -Recurse |
     Where-Object { $_.LastWriteTime -gt (Get-Date).AddDays(-7) }
     
-
+# get string length
+$string = "Hello, World!"
+$length = $string.Length
 ```
 
 ### json

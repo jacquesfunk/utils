@@ -298,10 +298,45 @@ Get-ChildItem -Path "C:\Users\user\first - second" -Recurse |
     
 
 ```
-hi
+
 ### json
 
 ```
+---
+# Define the directory containing the JSON files
+$jsonDirectory = "C:\Users\mahmad\OneDrive - Ryan RTS\Downloads"
+# Define the path for the output file
+$outputFile = "C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\combined.json"
+
+# Initialize an empty array to hold all JSON data
+$allJsonData = @()
+
+# Loop through each JSON file in the specified directory
+Get-ChildItem -Path $jsonDirectory -Filter *.json | ForEach-Object {
+    # Read and convert JSON content from each file
+    $jsonData = Get-Content -Path $_.FullName | ConvertFrom-Json
+    # Add the JSON data to the array
+    $allJsonData += $jsonData
+}
+
+# Convert the combined array back to JSON format
+$combinedJson = $allJsonData | ConvertTo-Json -Depth 10
+
+# Write the combined JSON content to the output file
+Set-Content -Path $outputFile -Value $combinedJson
+
+# Read the combined JSON content from the output file
+$jsonData = Get-Content -Path $outputFile | ConvertFrom-Json
+
+# Loop through each record and output the 'SalesforceResponse' property
+foreach ($record in $jsonData) {
+    if ($record.PSObject.Properties["SalesforceResponse"]) {
+        Write-Output $record.SalesforceResponse
+    } else {
+        Write-Output "SalesforceResponse property not found in record."
+    }
+}
+---
 
 # import json
 $jsonData = Get-Content -Path “C:\path\to\your\data.json” -Raw | ConvertFrom-Json

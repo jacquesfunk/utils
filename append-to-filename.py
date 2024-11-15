@@ -1,21 +1,17 @@
-
-import os
+from pathlib import Path
 
 def prepend_to_filenames(directory, prefix):
     # Loop through all files in the directory
-    for filename in os.listdir(directory):
-        # Construct the old file path
-        old_file_path = os.path.join(directory, filename)
-        
+    for file in Path(directory).iterdir():
         # Check if it is a file (not a directory)
-        if os.path.isfile(old_file_path):
+        if file.is_file():
             # Create the new filename
-            new_filename = prefix + filename
-            new_file_path = os.path.join(directory, new_filename)
+            new_filename = prefix + file.name
+            new_file_path = file.with_name(new_filename)
             
             # Rename the file
-            os.rename(old_file_path, new_file_path)
-            print(f'Renamed: {filename} -> {new_filename}')
+            file.rename(new_file_path)
+            print(f'Renamed: {file.name} -> {new_filename}')
 
 # Example usage
 directory_path = 'path/to/your/directory'  # Replace with your directory path

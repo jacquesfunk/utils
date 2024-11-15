@@ -1,15 +1,15 @@
-import os
+from pathlib import Path
 
 def compare_files(file1_name, file2_name):
     # Get the current directory where the script is located
-    script_dir = os.path.dirname(os.path.abspath(__file__))
+    script_dir = Path(__file__).parent
     
     # Construct full file paths
-    file1_path = os.path.join(script_dir, file1_name)
-    file2_path = os.path.join(script_dir, file2_name)
+    file1_path = script_dir / file1_name
+    file2_path = script_dir / file2_name
     
     try:
-        with open(file1_path, 'r') as file1, open(file2_path, 'r') as file2:
+        with file1_path.open('r') as file1, file2_path.open('r') as file2:
             lines1 = file1.readlines()
             lines2 = file2.readlines()
 

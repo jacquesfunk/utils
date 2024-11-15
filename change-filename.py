@@ -1,9 +1,8 @@
-import os
+from pathlib import Path
 import re
 
 # Specify the directory you want to rename files in
-directory = r"C:\Users\mahmad\OneDrive - Ryan RTS\resources"
-directory = r"C:\Users\mahmad\OneDrive - Ryan RTS\resources"
+directory = Path(r"C:\Users\mahmad\OneDrive - Ryan RTS\resources")
 
 # Function to add dashes before letters, remove special characters, and replace whitespace with dashes
 def add_dashes(name):
@@ -22,21 +21,18 @@ def remove_extra_dash(filename):
     return filename
 
 # Loop through all files in the directory
-for filename in os.listdir(directory):
-    # Check if the file has the specified image extensions
-    if filename.lower().endswith(('.txt', '.xlsx', '.docx', '.md', '.py', '.sql', '.ipynb', '.png', '.jpg', '.gif', '.jpeg', '.vsdx', '.pdf', '.html', '.csv', '.epub')):
-        # Build the full path
-        old_path = os.path.join(directory, filename)
-        
+for file in directory.iterdir():
+    if file.is_file() and file.suffix.lower() in ('.txt', '.xlsx', '.docx', '.md', '.py', '.sql', '.ipynb', 
+                                                  '.png', '.jpg', '.gif', '.jpeg', '.vsdx', '.pdf', '.html', 
+                                                  '.csv', '.epub'):
         # Convert the file name
-        name, ext = os.path.splitext(filename)
+        name, ext = file.stem, file.suffix  # Extract name and extension
         new_filename = add_dashes(name) + ext.lower()  # Apply transformations to the filename and convert extension to lowercase
         
         # Remove extra dashes
         new_filename = remove_extra_dash(new_filename)
         
-        new_path = os.path.join(directory, new_filename)
-        
-        # Rename the file
-        os.rename(old_path, new_path)
-        print(f"Renamed: {filename} -> {new_filename}")
+        # Define new path and rename
+        new_path = file.with_name(new_filename)
+        file.rename(new_path)
+        print(f"Renamed: {file.name} -> {new_filename}")

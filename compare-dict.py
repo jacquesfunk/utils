@@ -1,150 +1,149 @@
-# Define the two dictionaries
-dbx_fields = {
-    "Descr": "string",
-    "DefaultAmt": "double",
-    "PurchasesOk": "boolean",
-    "CollectionsOk": "boolean",
-    "Balance": "double",
-    "FinCode": "string",
-    "AcctNo": "string",
-    "CurrencyType": "string",
-    "CashAcct": "boolean",
-    "LoansOk": "boolean",
-    "AutoCheckOnly": "boolean",
-    "NextCheckNo": "string",
-    "CostCenter": "string",
-    "SubHdgAcctNo": "string",
-    "FinReportNo": "int",
-    "FinCategory": "int",
-    "FinType": "int",
-    "FinPrint": "boolean",
-    "ReptModName": "string",
-    "Accounts": "int",
-    "BankAcctNo": "string",
-    "BankAbaNo": "string",
-    "HoldAcct": "int",
-    "HoldAbbr": "string",
-    "PostFuOnHold": "boolean",
-    "RemindType": "int",
-    "RemindUser": "string",
-    "RemindDays": "int",
-    "TaxableCode": "int",
-    "WireChargeAcctNo": "string",
-    "WireChargeAmt": "double",
-    "PayByMethod": "int",
-    "Earnings": "int",
-    "PreviewCheck": "boolean",
-    "RunClientCalc": "boolean",
-    "WashHoldOk": "boolean",
-    "Office": "string",
-    "CountryCode": "string",
-    "SwiftCode": "string",
-    "NfeInclude": "boolean",
-    "AnalysisCode": "string",
-    "CheckPrefix": "string",
-    "AltCashAcct": "string",
-    "Deferred": "boolean",
-    "LockBy": "string",
-    "LockTime": "timestamp",
-    "ACHCOID": "string"
-}
+import csv
 
-redshift_fields = {
-    "Descr": "text",
-    "DefaultAmt": "double precision",
-    "PurchasesOk": "boolean",
-    "CollectionsOk": "boolean",
-    "Balance": "double precision",
-    "FinCode": "text",
-    "AcctNo": "text",
-    "CurrencyType": "text",
-    "CashAcct": "boolean",
-    "LoansOk": "boolean",
-    "AutoCheckOnly": "boolean",
-    "NextCheckNo": "text",
-    "CostCenter": "text",
-    "SubHdgAcctNo": "text",
-    "FinReportNo": "smallint",
-    "FinCategory": "smallint",
-    "FinType": "smallint",
-    "FinPrint": "boolean",
-    "ReptModName": "text",
-    "Accounts": "integer",
-    "BankAcctNo": "text",
-    "BankAbaNo": "text",
-    "HoldAcct": "smallint",
-    "HoldAbbr": "text",
-    "PostFuOnHold": "boolean",
-    "RemindType": "smallint",
-    "RemindUser": "text",
-    "RemindDays": "smallint",
-    "TaxableCode": "smallint",
-    "WireChargeAcctNo": "text",
-    "WireChargeAmt": "double precision",
-    "PayByMethod": "smallint",
-    "Earnings": "integer",
-    "PreviewCheck": "boolean",
-    "RunClientCalc": "boolean",
-    "WashHoldOk": "boolean",
-    "Office": "text",
-    "CountryCode": "text",
-    "SwiftCode": "text",
-    "NfeInclude": "boolean",
-    "AnalysisCode": "text",
-    "CheckPrefix": "text",
-    "AltCashAcct": "text",
-    "Deferred": "boolean",
-    "LockBy": "text",
-    "LockTime": "timestamp without time zone",
-    "ACHCOID": "text"
-}
+def csv_to_dict(file_path, col_name_key, data_type_key):
+    """
+    Reads a CSV file and converts it to a list of dictionaries,
+    extracting only specified keys for each row.
+    """
+    with open(file_path, mode='r', encoding='utf-8') as file:
+        reader = csv.DictReader(file)
+        return [
+            {
+                col_name_key: row.get(col_name_key, "").strip(),
+                data_type_key: row.get(data_type_key, "").strip(),
+            }
+            for row in reader
+        ]
 
 # Transformation rules
 type_mapping = {
     "text": "string",
     "smallint": "int",
+    "bigint": "int",
     "integer": "int",
     "double precision": "double",
-    "timestamp without time zone": "timestamp"
+    "numeric": "double",
+    "timestamp without time zone": "timestamp",
+    "datetime": "timestamp",
+    "nvarchar": "string",
+    "varchar": "string",
+    "character varying": "string",
+    "nvarchar": "string",
+    "bit": "boolean",
+    "money": "double",
+    "decimal": "double"
 }
 
-# Update redshift_fields to match dict1 format
-updated_redshift_fields = {
-    key: type_mapping.get(value, value)
-    for key, value in redshift_fields.items()
-}
+def apply_type_mapping(fields, type_mapping):
+    """
+    Updates the data types in a list of field dictionaries based on a given type mapping.
+    """
+    return [
+        {
+            "column_name": field["column_name"].strip().lower(),
+            "data_type": type_mapping.get(field["data_type"].strip().lower(), field["data_type"].strip().lower()),
+        }
+        for field in fields
+    ]
 
-# Find keys in redshift_fields that are not in dbx_fields
-missing_in_dbx = {key for key in redshift_fields if key not in dbx_fields}
+def list_to_dict(fields):
+    """
+    Converts a list of dictionaries to a dictionary with column_name as the key
+    and data_type as the value. Keys are converted to lowercase and sorted alphabetically.
+    """
+    return {
+        field["column_name"].strip().lower(): field["data_type"].strip().lower()
+        for field in sorted(fields, key=lambda x: x["column_name"].strip().lower())
+    }
 
-# Find keys in dbx_fields that are not in redshift_fields
-missing_in_redshift = {key for key in dbx_fields if key not in updated_redshift_fields}
+def compare_fields(name1, name2, dict1, dict2):
+    """
+    Compares two dictionaries for missing keys and mismatched data types.
+    Returns the comparison results as a dictionary.
+    """
+    missing_in_dict2 = set(dict1.keys()) - set(dict2.keys())
+    missing_in_dict1 = set(dict2.keys()) - set(dict1.keys())
+    type_mismatches = {
+        key: (dict1[key], dict2[key])
+        for key in dict1
+        if key in dict2 and dict1[key] != dict2[key]
+    }
+    return {
+        "missing_in_dict2": missing_in_dict2,
+        "missing_in_dict1": missing_in_dict1,
+        "type_mismatches": type_mismatches,
+    }
 
-# Find keys with mismatched types
-type_mismatches = {
-    key: (dbx_fields.get(key), updated_redshift_fields[key])
-    for key in redshift_fields
-    if key in dbx_fields and dbx_fields[key] != updated_redshift_fields[key]
-}
+def process_comparisons(output_file="comparison_results.md", **kwargs):
+    """
+    Accepts 3 or 4 dictionaries and compares them pairwise.
+    Saves the comparison results to a Markdown file.
+    """
+    keys = list(kwargs.keys())
+    num_dicts = len(keys)
+    
+    if num_dicts not in [3, 4]:
+        raise ValueError("The function accepts exactly 3 or 4 dictionaries.")
+    
+    output_lines = []
 
-# Print results
-print("Keys in redshift_fields that are not in dbx_fields:")
-if missing_in_dbx:
-    for key in missing_in_dbx:
-        print(f"  - {key}")
-else:
-    print("No mismatches")
+    # Compare each pair of dictionaries
+    for i in range(num_dicts):
+        for j in range(i + 1, num_dicts):
+            name1, dict1 = keys[i], kwargs[keys[i]]
+            name2, dict2 = keys[j], kwargs[keys[j]]
+            result = compare_fields(name1, name2, dict1, dict2)
+            
+            # Format the comparison results
+            output_lines.append(f"## Comparison: {name1} vs {name2}\n")
+            output_lines.append(f"### Keys in {name1} that are not in {name2}:\n")
+            output_lines.extend(f"- {key}" for key in sorted(result["missing_in_dict2"]))
+            if not result["missing_in_dict2"]:
+                output_lines.append("No mismatches found.")
 
-print("\nKeys in dbx_fields that are not in redshift_fields:")
-if missing_in_redshift:
-    for key in missing_in_redshift:
-        print(f"  - {key}")
-else:
-    print("No mismatches")
+            output_lines.append(f"\n### Keys in {name2} that are not in {name1}:\n")
+            output_lines.extend(f"- {key}" for key in sorted(result["missing_in_dict1"]))
+            if not result["missing_in_dict1"]:
+                output_lines.append("No mismatches found.")
 
-print("\nKeys with mismatched types:")
-if type_mismatches:
-    for key, (dbx_type, redshift_type) in type_mismatches.items():
-        print(f"  - {key}: dbx_fields={dbx_type}, redshift_fields={redshift_type}")
-else:
-    print("No mismatches")
+            output_lines.append(f"\n### Keys with mismatched types:\n")
+            output_lines.extend(
+                f"- {key}: {name1}={types[0]}, {name2}={types[1]}"
+                for key, types in sorted(result["type_mismatches"].items())
+            )
+            if not result["type_mismatches"]:
+                output_lines.append("No mismatches found.")
+            output_lines.append("\n" + "=" * 50 + "\n")
+    
+    # Write to file
+    with open(output_file, "w") as file:
+        file.write("\n".join(output_lines))
+
+# Example usage
+file_dbx = r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\debtors.csv"
+file_rs = r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\svv_columns-20241121.csv"
+file_pg = r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\columns-20241121.csv"
+file_cadence = r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\COLUMNS-20241121-1732207220098.csv"
+
+# Load and preprocess data
+dbx_fields = csv_to_dict(file_dbx, "col_name", "data_type")
+for field in dbx_fields:
+    field["column_name"] = field.pop("col_name")
+redshift_fields = csv_to_dict(file_rs, "column_name", "data_type")
+pg_fields = csv_to_dict(file_pg, "column_name", "data_type")
+cadence_fields = csv_to_dict(file_cadence, "column_name", "data_type")
+
+# Apply type mappings
+dbx_dict = list_to_dict(apply_type_mapping(dbx_fields, type_mapping))
+redshift_dict = list_to_dict(apply_type_mapping(redshift_fields, type_mapping))
+pg_dict = list_to_dict(apply_type_mapping(pg_fields, type_mapping))
+cadence_dict = list_to_dict(apply_type_mapping(cadence_fields, type_mapping))
+
+# Call process_comparisons with 3 or 4 dictionaries
+process_comparisons(
+    output_file="comparison_results.md",
+    dbx=dbx_dict,
+    redshift=redshift_dict,
+    postgres=pg_dict,
+    cadence=cadence_dict
+)

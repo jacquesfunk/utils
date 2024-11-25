@@ -144,6 +144,13 @@ sed 's/old/new/' file.txt
 # convert all lowercase letters to uppercase in textfile.txt
 sed 's/.*/\U&/' textfile.txt
 
+# Text substitution (reading from file and saving to the same file)
+sed -i -e 's/find/replace/g' teste
+
+# Add a newline only if it doesn’t exist
+echo "" >> file;  sed -ie '/^$/d;$G' file; sed -ie '/^$/d;$G' file
+
+
 ```
 
 ## zsh
@@ -192,6 +199,19 @@ ls *(-/) - List only directories and symbolic links to directories.
 # find all gif files in a dir or subdir 
 find . -type f -name '*.gif' -exec sh -c \
 'file "$0" | grep -q "animated"' {} \; -print
+
+# print all files to be deleted to terminal
+find ~/ -name ".EagleFiler Metadata.plist" -print
+
+# move all files to Trash
+find ~/ -name ".EagleFiler Metadata.plist" -exec mv {} ~/.Trash/ \;
+
+```
+
+```
+
+# append text to a file only if text does not exist
+echo 'input text' | grep -xFv -f existing_file.txt >> existing_file.txt
 
 ```
 

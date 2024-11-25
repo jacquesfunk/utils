@@ -200,6 +200,12 @@ ls *(-/) - List only directories and symbolic links to directories.
 find . -type f -name '*.gif' -exec sh -c \
 'file "$0" | grep -q "animated"' {} \; -print
 
+# print all files to be deleted to terminal
+find ~/ -name ".EagleFiler Metadata.plist" -print
+
+# move all files to Trash
+find ~/ -name ".EagleFiler Metadata.plist" -exec mv {} ~/.Trash/ \;
+
 ```
 
 ```

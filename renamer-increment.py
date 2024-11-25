@@ -1,41 +1,41 @@
-import os
+from pathlib import Path
 
 def rename_files(directory, id, start_record):
+    # Convert directory to a Path object
+    directory_path = Path(directory)
+    
     # Check if the directory exists
-    if not os.path.exists(directory):
+    if not directory_path.exists():
         print(f"Error: The directory '{directory}' does not exist.")
         return
     
     # Get a list of all files in the directory
-    files = os.listdir(directory)
+    files = list(directory_path.iterdir())
     
     # Initialize the record number
     record_number = start_record
     
     # Loop through each file in the directory
-    for filename in files:
+    for file in files:
+        # Skip if it's not a file
+        if not file.is_file():
+            continue
+        
         # Construct the new filename
-        new_filename = f"{id}-{record_number}"
+        new_filename = f"{id}-{record_number}{file.suffix}"
         
-        # Get the file extension
-        _, file_extension = os.path.splitext(filename)
-        
-        # Add the file extension to the new filename
-        new_filename_with_extension = f"{new_filename}{file_extension}"
-        
-        # Construct full file paths
-        old_file = os.path.join(directory, filename)
-        new_file = os.path.join(directory, new_filename_with_extension)
+        # Create the new file path
+        new_file_path = directory_path / new_filename
         
         try:
             # Rename the file
-            os.rename(old_file, new_file)
-            print(f"Renamed '{filename}' to '{new_filename_with_extension}'")
+            file.rename(new_file_path)
+            print(f"Renamed '{file.name}' to '{new_filename}'")
             
             # Increment the record number
             record_number += 1
         except Exception as e:
-            print(f"Error renaming file '{filename}': {e}")
+            print(f"Error renaming file '{file.name}': {e}")
 
     print("Files have been renamed successfully.")
 

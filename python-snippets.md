@@ -31,6 +31,10 @@ print(replaced_text)
 ## Misc scripts
 
 ```
+
+# generate calendar in the terminal
+python -m calendar 2024 11
+
 # set date to today
 from datetime import datetime as dt
 date_today = dt.now()

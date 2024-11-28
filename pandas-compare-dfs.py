@@ -1,50 +1,43 @@
 import pandas as pd
 
-dfolddataset1 = pd.read_excel('File1.xlsx', sheet_name = 1)
-dfolddataset1errors = pd.read_excel('File1.xlsx', sheet_name = 2)
-dfolddataset2 = pd.read_excel('File1.xlsx', sheet_name = 3)
-dfolddataset2errors = pd.read_excel('File1.xlsx', sheet_name = 4)
-dfoldreassignopps = pd.read_excel('File1.xlsx', sheet_name = 5)
+def load_and_sort_csv(file_name):
+    """Loads a CSV file and sorts it by the 'HistoryKey' column."""
+    df = pd.read_csv(file_name)
+    df_sorted = df.sort_values(by=['HistoryKey'])
+    return df_sorted.reset_index(drop=True)
 
-dfnewdataset1 = pd.read_excel('File2.xlsx', sheet_name = 1)
-dfnewdataset1errors = pd.read_excel('File2.xlsx', sheet_name = 2)
-dfdataset2 = pd.read_excel('File2.xlsx', sheet_name = 3)
-dfdataset2errors = pd.read_excel('File2.xlsx', sheet_name = 4)
-dfdataset3 = pd.read_excel('File2.xlsx', sheet_name = 5)
+def find_diff_rows_with_source(name_col='Source', **dfs):
+    """
+    Finds differing rows between multiple DataFrames and identifies their source.
+    Returns a combined DataFrame with a column specifying the origin.
+    
+    Parameters:
+    - name_col: Name of the source column
+    - **dfs: DataFrames provided as keyword arguments with identifiers as keys
+    """
+    # Add a source identifier column to each DataFrame and combine
+    for source, df in dfs.items():
+        df[name_col] = source
+    combined = pd.concat(dfs.values(), ignore_index=True)
+    
+    # Sort the combined DataFrame
+    combined = combined.sort_values("HistoryKey").reset_index(drop=True)
 
-dfolddataset1list = dfolddataset1.columns.values.tolist()
-dfolddataset1errorslist = dfolddataset1errors.columns.values.tolist()
-dfolddataset2list = dfolddataset2.columns.values.tolist()
-dfolddataset2errorslist = dfolddataset2errors.columns.values.tolist()
-dfoldreassignoppslist = dfoldreassignopps.columns.values.tolist()
+    return combined
 
-dfnewdataset1list = dfnewdataset1.columns.values.tolist()
-dfnewdataset1errorslist = dfnewdataset1errors.columns.values.tolist()
-dfdataset2list = dfdataset2.columns.values.tolist()
-dfdataset2errorslist = dfdataset2errors.columns.values.tolist()
-dfdataset3list = dfdataset3.columns.values.tolist()
+name = 'HistoryKey'
 
-if dfolddataset1list == dfnewdataset1list:
-    print("The dataset1 lists are identical")
-else:
-    print("The dataset1 lists are not identical")
+# Load and sort data
+df1 = load_and_sort_csv(r'C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\debtorhistory-20241121.csv')
+df2 = load_and_sort_csv(r'C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\HistoryKey.csv')
+df3 = load_and_sort_csv(r'C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\DebtorHistory-20241121-1732201848967.csv')
 
-if dfolddataset1errorslist == dfnewdataset1errorslist:
-    print("The dataset1errors lists are identical")
-else:
-    print("The dataset1errors lists are not identical")
+# Find differing rows with their source, handling either 3 or 4 files dynamically
+df_diff = find_diff_rows_with_source(PG=df1, DBX=df2, CADENCEPRD=df3)
+# df_diff = find_diff_rows_with_source(PG=df1, DBX=df2, CADENCEPRD=df3, RS=df4)
 
-if dfolddataset2list == dfdataset2list:
-    print("The dataset2 lists are identical")
-else:
-    print("The dataset2 lists are not identical")
+# Save differing rows to a CSV file
+output_file = f'{name}-diffs.csv'
+df_diff.to_csv(output_file, index=False)
 
-if dfolddataset2errorslist == dfdataset2errorslist:
-    print("The dataset2serrors lists are identical")
-else:
-    print("The dataset2serrors lists are not identical")
-
-if dfoldreassignoppslist == dfdataset3list:
-    print("The dataset3 lists are identical")
-else:
-    print("The dataset3 lists are not identical")
+print(f"Differences saved to {output_file}")

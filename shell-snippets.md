@@ -275,6 +275,36 @@ echo 'input text' | grep -xFv -f existing_file.txt >> existing_file.txt
 # count number of lines in file
 wc -l filename
 
+# count characters in string
+SO="stackoverflow"
+echo -n "$SO" | wc -c
+
+```
+
+# MacOS
+## caffeinate
+
+```
+
+# Adding the -d flag also prevents the display from going to sleep.
+# Specifying an existing process with -w <pid> automatically exits the caffeinate command once the specified process exits.
+# Passing a command with caffeinate <command> starts the given command in a new process and prevents sleep until that process exits.
+
+caffeinate -u -t -d -w 1234556 <seconds>
+
+---
+
+screencapture -c takes a screenshot and copies it to the clipboard.
+
+screencapture <file> takes a screenshot and saves it to the given file.
+
+Add the -T <seconds> flag to take the screenshot after the given delay in seconds.
+
+---
+
+# The possible values for -convert are: txt, html, rtf, rtfd, doc, docx
+textutil -convert html journal.doc # converts journal.doc into journal.html
+
 ```
 
 # Windows

@@ -107,6 +107,44 @@ sort file.txt | uniq
 
 ```
 
+### aliases
+
+```
+
+# Never accidentally delete a file again
+alias rm='rm -i'
+
+# Safely move and copy data
+alias mv='mv -iv'
+alias cp='cp -iv'
+
+# Colorize grep
+alias grep='grep --color'
+
+# weather forecast
+alias weather3="curl -s 'wttr.in/london?F'"
+alias weather=”curl -s ‘wttr.in/meyrin+switzerland?1F’”
+alias fancy_weather=”curl ‘wttr.in/nashville?format=v2’”
+
+
+```
+
+### functions
+
+```
+
+function pdf_to_png () {
+    local pdf="${1}"
+    local png=${pdf%.*}".png"
+
+    convert -density 800 "${pdf}" -quality 100 "${png}"
+}
+
+
+
+
+```
+
 ## jq
 
 ```
@@ -208,7 +246,22 @@ find ~/ -name ".EagleFiler Metadata.plist" -exec mv {} ~/.Trash/ \;
 
 ```
 
+#### misc
+
 ```
+
+---
+# add to mac path
+# 1. Navigate to the bin folder for your CLI application in your command line
+# run pwd to “print working directory.
+pwd
+
+# append the directory to the $PATH using the following command
+path+=('/Users/yourcomputer/Documents/google-cloud-sdk/bin')
+
+# save PATH
+export path
+---
 
 # append text to a file only if text does not exist
 echo 'input text' | grep -xFv -f existing_file.txt >> existing_file.txt

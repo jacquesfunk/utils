@@ -1,31 +1,31 @@
-import os
+from pathlib import Path
 import csv
 
 def search_csv_files(directory, search_string):
-    # Get a list of all files in the directory
-    files = [file for file in os.listdir(directory) if file.endswith('.csv')]
+    # Get a list of all CSV files in the directory
+    files = list(directory.glob('*.csv'))
 
     # Iterate through each CSV file
-    for file_name in files:
-        file_path = os.path.join(directory, file_name)
-        print(f"Searching in file: {file_name}")
+    for file_path in files:
+        print(f"Searching in file: {file_path.name}")
 
         # Open the CSV file
-        with open(file_path, 'r', newline='') as csvfile:
+        with file_path.open('r', newline='', encoding='utf-8') as csvfile:
             reader = csv.reader(csvfile)
 
             # Iterate through each row in the CSV file
-            for row in reader:
+            for line_number, row in enumerate(reader, start=1):
                 # Check if the search string is in any column
                 if any(search_string.lower() in column.lower() for column in row):
-                    print(f"Found in file: {file_name}, row: {row}")
-    else: print("Not found")
+                    print(f"Found in file: {file_path.name}, line: {line_number}, row: {row}")
+    else:
+        print("Not found")
 
 # Define the directory containing the CSV files
-directory = '.'  # Current directory
+directory = Path(r"C:\Users\mahmad\OneDrive - Ryan RTS\code\csv_files")
 
 # Define the search string
-search_string = input("Enter the string you want to search for: ")
+search_string = "example"
 
 # Call the function to search CSV files
 search_csv_files(directory, search_string)

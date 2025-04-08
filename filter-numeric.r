@@ -1,3 +1,5 @@
+if (!require("dplyr")) install.packages("dplyr")
+
 # Load necessary library
 library(dplyr)
 

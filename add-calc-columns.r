@@ -1,4 +1,8 @@
 # Load necessary libraries
+if (!require("dplyr")) install.packages("dplyr")
+if (!require("readr")) install.packages("readr")
+if (!require("stringr")) install.packages("stringr")
+
 library(dplyr)
 library(readr)
 library(stringr)

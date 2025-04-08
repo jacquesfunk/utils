@@ -1,3 +1,7 @@
+if (!require("dplyr")) install.packages("dplyr")
+if (!require("readr")) install.packages("readr")
+if (!require("openxlsx")) install.packages("openxlsx")
+
 # Load necessary libraries
 library(dplyr)
 library(readr)

@@ -1,4 +1,6 @@
 # Load necessary library
+if (!require("lubridate")) install.packages("lubridate")
+
 library(lubridate)
 
 # Function to calculate hours elapsed

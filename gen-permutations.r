@@ -1,3 +1,5 @@
+if (!require("gtools")) install.packages("gtools")
+
 # Load necessary library
 library(gtools)
 

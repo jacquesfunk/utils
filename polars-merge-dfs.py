@@ -17,6 +17,12 @@ df2 = df2.filter(pl.col("active") == False)
 # Merge df1 and df2 based on 'factorsoft_client_number__c' and 'masterclientno'
 merged_df = df1.join(df2, left_on='factorsoft_client_number__c', right_on='masterclientno', how='inner')
 
+# # Merge df1 and df2 based on 'factorsoft_client_number__c' and 'masterclientno' and find unmatched records
+# merged_df = df1.join(
+#     df2, left_on="factorsoft_client_number__c", right_on="masterclientno", how="inner"
+# )
+
+
 # Drop duplicates
 merged_df = merged_df.unique()
 

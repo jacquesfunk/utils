@@ -4,6 +4,9 @@
 
 ```
 
+# compare files to remove dupes from one in another
+awk 'NR == FNR{ a[$0] = 1;next } !a[$0]'  >> RtsTransactionsFtp2025-03-17_fixed.csv RtsTransactionsFtp2025-03-17.csv RtsTransactionsFtp2025-03-17_new.csv
+
 ## write only 1st and 2nd column of file, using white space as delimiter
 awk '{print $1, $2}' log.txt
 

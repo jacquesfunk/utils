@@ -10,7 +10,7 @@ if directory.is_dir():
             # Remove the .jpg extension
             new_name = file.stem  # Get the filename without the extension
             new_path = file.with_name(new_name)  # Create the new path
-            
+
             # Rename the file
             file.rename(new_path)
             print(f"Renamed: {file.name} -> {new_name}")

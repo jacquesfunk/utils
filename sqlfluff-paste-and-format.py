@@ -1,10 +1,11 @@
 import sqlfluff
 import subprocess
-import re
+
 
 def copy2clip(txt):
-    cmd = f'echo {txt.strip()} | clip'
+    cmd = f"echo {txt.strip()} | clip"
     return subprocess.run(cmd, shell=True, check=True, text=True)
+
 
 def format_sql_query(sql_query):
     # Format the SQL content using sqlfluff
@@ -45,6 +46,7 @@ def format_sql_query(sql_query):
         ],
     )
     return formatted_sql
+
 
 # Example usage
 sql_query = """SELECT name, id, dot_number__c

@@ -1,9 +1,11 @@
 import subprocess
 from rich import print
 
+
 def copy2clip(txt):
-    cmd='echo '+txt.strip()+'|clip'
+    cmd = "echo " + txt.strip() + "|clip"
     return subprocess.check_call(cmd, shell=True)
+
 
 text_with_line_breaks = """AND(
 OR(
@@ -19,7 +21,9 @@ ISCHANGED(OwnerId)
 )"""
 
 # Remove spaces, line breaks, and carriage returns
-text_without_line_breaks = text_with_line_breaks.replace(" ", "").replace("\n", "").replace("\r", "")
+text_without_line_breaks = (
+    text_with_line_breaks.replace(" ", "").replace("\n", "").replace("\r", "")
+)
 
 print(text_without_line_breaks)
 

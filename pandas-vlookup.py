@@ -29,9 +29,7 @@ def remove_whitespace_from_columns(df, columns_to_clean=None):
     return cleaned_df
 
 
-df_main_orig = pd.read_excel(
-    "Excel.xlsx", sheet_name="Master File"
-)
+df_main_orig = pd.read_excel("Excel.xlsx", sheet_name="Master File")
 df_lookup_orig = pd.read_csv("file.csv")
 
 df_main = remove_whitespace_from_columns(df_main_orig, "column")
@@ -39,24 +37,14 @@ df_lookup = remove_whitespace_from_columns(df_newfuel_orig, "column")
 
 
 result = pd.merge(
-    df_main[
-        [
-          "Column 1",
-          "Column 2",
-          "Column 3"
-        ]
-    ],
+    df_main[["Column 1", "Column 2", "Column 3"]],
     df_lookup,
     on="column1",
     how="inner",
 )
 
 # Select only the specified columns in the fuel_result DataFrame
-selected_columns = [
-          "Column 1",
-          "Column 2",
-          "Column 3"
-]
+selected_columns = ["Column 1", "Column 2", "Column 3"]
 
 final_result = result[selected_columns]
 

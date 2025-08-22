@@ -1,18 +1,17 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, regexp_replace, count, expr
+from pyspark.sql.functions import col, regexp_replace, count
 
 # Initialize Spark session
-spark = SparkSession.builder \
-    .appName("CSV Processing") \
-    .getOrCreate()
+spark = SparkSession.builder.appName("CSV Processing").getOrCreate()
 
 # Load the CSV file
 input_path = "path/to/your/input.csv"
 df = spark.read.csv(input_path, header=True, inferSchema=True)
 
 # Rename columns (e.g., renaming "oldName1" to "newName1", "oldName2" to "newName2")
-renamed_df = df.withColumnRenamed("oldName1", "newName1") \
-               .withColumnRenamed("oldName2", "newName2")
+renamed_df = df.withColumnRenamed("oldName1", "newName1").withColumnRenamed(
+    "oldName2", "newName2"
+)
 
 # Replace whitespace in column 'A' with dashes
 cleaned_df = renamed_df.withColumn("A", regexp_replace(col("A"), r"\s+", "-"))
@@ -21,7 +20,9 @@ cleaned_df = renamed_df.withColumn("A", regexp_replace(col("A"), r"\s+", "-"))
 filtered_df = cleaned_df.filter(col("age") > 30)
 
 # Select specific columns to include in the output
-selected_df = filtered_df.select("A", "B", "C", "E", "F", "newName1", "newName2", "otherColumn")
+selected_df = filtered_df.select(
+    "A", "B", "C", "E", "F", "newName1", "newName2", "otherColumn"
+)
 
 # Drop duplicate rows based on selected columns
 unique_df = selected_df.dropDuplicates()
@@ -40,9 +41,11 @@ record_count_E = selected_df.filter(col("E").isNotNull()).count()
 print(f"Number of records in column 'E': {record_count_E}")
 
 # Conditional count for column 'F'
-criteria = 'desired_value'  # Replace with your actual criteria
+criteria = "desired_value"  # Replace with your actual criteria
 conditional_count_F = selected_df.filter(col("F") == criteria).count()
-print(f"Number of records in column 'F' with criteria '{criteria}': {conditional_count_F}")
+print(
+    f"Number of records in column 'F' with criteria '{criteria}': {conditional_count_F}"
+)
 
 # Write the transformed DataFrame to a new CSV file
 output_path = "path/to/your/output.csv"

@@ -1,8 +1,12 @@
 # Read the contents of the files
-with open(r'C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\rs-parameters.txt', 'r') as file:
+with open(
+    r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\rs-parameters.txt", "r"
+) as file:
     rs_parameters = file.read().splitlines()
 
-with open(r'C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\dbx-parameters.txt', 'r') as file:
+with open(
+    r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\dbx-parameters.txt", "r"
+) as file:
     dbx_parameters = file.read().splitlines()
 
 # Convert the lists to sets for comparison
@@ -19,8 +23,8 @@ dbx_not_in_rs = sorted(dbx_set.difference(rs_set))
 rs_not_in_dbx = sorted(rs_set.difference(dbx_set))
 
 # Write the results to a new file
-output_file = r'C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\comparison_results.txt'
-with open(output_file, 'w') as file:
+output_file = r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\comparison_results.txt"
+with open(output_file, "w") as file:
     file.write("Common fields:\n")
     file.write("\n".join(common_fields))
     file.write("\n\nFields in dbx but not in rs:\n")

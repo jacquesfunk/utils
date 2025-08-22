@@ -30,32 +30,49 @@ def remove_whitespace_from_columns(df, columns_to_clean=None):
 
 
 # Read CSV files
-df_main = pd.read_csv(r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\_SET_TIMEZONE_TO_CST6_SELECT_client_key_client_id_client_name_ra-20241125.csv")
+df_main = pd.read_csv(
+    r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\_SET_TIMEZONE_TO_CST6_SELECT_client_key_client_id_client_name_ra-20241125.csv"
+)
 df_lookup = pd.read_csv(r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\dbx.csv")
 
 # Rename columns in df_lookup for consistency
-df_lookup.rename(columns={"masterkey": "client_key", "include_credit_rating": "client_rating"}, inplace=True)
+df_lookup.rename(
+    columns={"masterkey": "client_key", "include_credit_rating": "client_rating"},
+    inplace=True,
+)
 
 # Convert 'created_at' to datetime for sorting
-df_main['created_at'] = pd.to_datetime(df_main['created_at'], errors='coerce')
+df_main["created_at"] = pd.to_datetime(df_main["created_at"], errors="coerce")
 
 # Keep only the most recent record for each client_key
-df_main = df_main.sort_values('created_at', ascending=False).groupby('client_key', as_index=False).first()
+df_main = (
+    df_main.sort_values("created_at", ascending=False)
+    .groupby("client_key", as_index=False)
+    .first()
+)
 
 # Merge the two DataFrames with indicator
 result = pd.merge(
     df_main,
     df_lookup,
-    on=["client_key", "client_rating", 'top_concentration', 'sales_month_over_month', 'missing_collateral', 'aging_past_due', 'aggregate_details'],  # Merge on both columns
+    on=[
+        "client_key",
+        "client_rating",
+        "top_concentration",
+        "sales_month_over_month",
+        "missing_collateral",
+        "aging_past_due",
+        "aggregate_details",
+    ],  # Merge on both columns
     how="left",  # Left join to retain all rows from df_main
     indicator=True,  # Add an indicator column to show match status
 )
 
 # Add a lookup_match column based on the indicator
-result['lookup_match'] = result['_merge'] == 'both'
+result["lookup_match"] = result["_merge"] == "both"
 
 # Drop the indicator column and non-df_main fields
-result_final = result[df_main.columns.tolist() + ['lookup_match']].drop_duplicates()
+result_final = result[df_main.columns.tolist() + ["lookup_match"]].drop_duplicates()
 
 # Save the result to a CSV file
 result_final.to_csv("result.csv", index=False)

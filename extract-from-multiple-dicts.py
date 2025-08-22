@@ -12,8 +12,8 @@ all_records_with_nonzero_nulls = []
 
 # Iterate over all files in the directory
 for file_path in directory.iterdir():
-    if file_path.is_file() and file_path.suffix == '.txt':
-        with file_path.open('r', encoding='utf-8') as file:
+    if file_path.is_file() and file_path.suffix == ".txt":
+        with file_path.open("r", encoding="utf-8") as file:
             content = file.read().strip()
 
         # Convert the content to valid JSON format
@@ -24,13 +24,17 @@ for file_path in directory.iterdir():
             continue
 
         # Extract records where count_null is not 0
-        records_with_nonzero_nulls = {key: value for key, value in data.items() if value.get('count_null', 0) != 0}
+        records_with_nonzero_nulls = {
+            key: value for key, value in data.items() if value.get("count_null", 0) != 0
+        }
 
         # Add the extracted records to the list
-        all_records_with_nonzero_nulls.append((file_path.name, records_with_nonzero_nulls))
+        all_records_with_nonzero_nulls.append(
+            (file_path.name, records_with_nonzero_nulls)
+        )
 
 # Write the extracted records to the output file
-with output_file.open('w', encoding='utf-8') as out_file:
+with output_file.open("w", encoding="utf-8") as out_file:
     for file_name, records in all_records_with_nonzero_nulls:
         out_file.write(f"File: {file_name}\n")
         for key, value in records.items():

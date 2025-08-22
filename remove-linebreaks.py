@@ -56,6 +56,8 @@ NOT(ISBLANK( Fuel_Account_Number__c ))
 )"""
 
 # Remove spaces, line breaks, and carriage returns
-text_without_line_breaks = text_with_line_breaks.replace(" ", "").replace("\n", "").replace("\r", "")
+text_without_line_breaks = (
+    text_with_line_breaks.replace(" ", "").replace("\n", "").replace("\r", "")
+)
 
 print(text_without_line_breaks)

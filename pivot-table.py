@@ -8,10 +8,12 @@ current_date = dt.now()
 
 df = pl.read_csv("finalerrorfile_1.csv")
 
+
 # Extract portion of string in field
 def extract_status_code(json_str):
     parsed_list = ast.literal_eval(json_str)
     return parsed_list[0]["statusCode"]
+
 
 # Create new column
 df = df.with_columns(

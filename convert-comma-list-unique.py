@@ -73,16 +73,20 @@ WIRE1213
 """
 
 # Remove duplicates and preserve order
-unique_strings = list(dict.fromkeys(line.strip() for line in input_string.strip().splitlines()))
+unique_strings = list(
+    dict.fromkeys(line.strip() for line in input_string.strip().splitlines())
+)
 
 # Format the list as a comma-separated string with single quotes
 formatted_list = [f"'{item}'" for item in unique_strings]
 result = ", ".join(formatted_list)
 
+
 # Function to copy to clipboard
 def copy2clip(txt):
-    cmd = 'echo ' + txt.strip() + '| clip'
+    cmd = "echo " + txt.strip() + "| clip"
     return subprocess.check_call(cmd, shell=True)
+
 
 # Copy the formatted string to the clipboard
 copy2clip(result)

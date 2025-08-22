@@ -6,8 +6,9 @@ from datetime import datetime as dt
 current_date = dt.now()
 
 # Load the CSV files using Polars
-df1 = pl.read_csv('file1.csv')
-df2 = pl.read_csv('file2.csv')
+df1 = pl.read_csv("file1.csv")
+df2 = pl.read_csv("file2.csv")
+
 
 # Define the xlookup function using Polars' filtering capabilities
 def xlookup(lookup_value, lookup_array, return_array, if_not_found: str = None):
@@ -16,6 +17,7 @@ def xlookup(lookup_value, lookup_array, return_array, if_not_found: str = None):
         return if_not_found
     else:
         return match_value[0]
+
 
 # Perform single column lookup and update 'col3'
 lookup_values = df1["col1"]
@@ -34,7 +36,7 @@ columns = ["col1"]
 # Drop duplicates based on the specified columns
 df1 = df1.unique(subset=columns)
 
-ticket_number = 'insert Jira number here'
+ticket_number = "insert Jira number here"
 output_filename = f"DS{ticket_number}_{current_date}_output.csv"
 
 # Write to CSV, skipping rows where 'col3' is null
@@ -44,8 +46,7 @@ with open(output_filename, "w", newline="") as f:
     for row in df1.iter_rows(named=True):
         if row["col1"] is None:
             continue  # skip row if col3 is null
-        
+
         writer.writerow([row[col] for col in columns])
 
-print('Job done')
-
+print("Job done")

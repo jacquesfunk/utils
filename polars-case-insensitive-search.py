@@ -10,12 +10,12 @@ df1 = pl.read_excel(
 df = df1.filter(
     # (pl.col("Status") == "validate fields")
     # & (
-        pl.any_horizontal(
-            pl.col("Marketing Data Source").cast(pl.Utf8).str.contains("(?i)RTS Pro")
-            # | pl.col("Actual Data Source").is_null()
-            # | pl.col("Actual Data Source").str.strip_chars().str.contains("^$")
-        )
+    pl.any_horizontal(
+        pl.col("Marketing Data Source").cast(pl.Utf8).str.contains("(?i)RTS Pro")
+        # | pl.col("Actual Data Source").is_null()
+        # | pl.col("Actual Data Source").str.strip_chars().str.contains("^$")
     )
+)
 # )
 # Print the number of rows in the filtered DataFrame
 print("Rows:", len(df))

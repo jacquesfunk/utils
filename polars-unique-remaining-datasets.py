@@ -6,7 +6,7 @@ df = pl.read_csv(r"C:\Users\mahmad\OneDrive - Ryan RTS\Code\powerbi-rs-remaining
 # Filter for unique dataset_ids
 df_unique = df.unique(subset=["dataset_id"])
 
-columns = ['dataset_id', 'dataset_name']
+columns = ["dataset_id", "dataset_name"]
 
 final_df = df_unique.select(columns)
 

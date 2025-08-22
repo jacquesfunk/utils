@@ -1,9 +1,7 @@
 import polars as pl
 
 # Read Excel file
-df = pl.read_csv(
-    "dataloadtestdata.csv"
-)
+df = pl.read_csv("dataloadtestdata.csv")
 
 # Get unique values from the "Bundle Type" column
 unique_bundle_types = df["Bundle Type"].unique()

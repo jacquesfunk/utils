@@ -7,7 +7,7 @@ df1 = pl.read_excel(
 )
 
 # Apply the formula logic to filter the DataFrame
-df = df1.filter(pl.col("diff?") == 'true')
+df = df1.filter(pl.col("diff?") == "true")
 
 # Print the filtered DataFrame
 print(df)

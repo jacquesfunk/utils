@@ -67,10 +67,11 @@ import json
 import csv
 import polars as pl
 
+
 def process_json_files(directory):
     # List all JSON files in the directory
     input_files = [f for f in os.listdir(directory) if f.endswith(".json")]
-    
+
     for i, input_file in enumerate(input_files, start=1):
         filtered_data = []
 
@@ -106,7 +107,9 @@ def process_json_files(directory):
                 for row in filtered_data:
                     writer.writerow(row)
 
-            print(f"Data from {input_file} has been processed and saved as CSV: {csv_file}")
+            print(
+                f"Data from {input_file} has been processed and saved as CSV: {csv_file}"
+            )
         else:
             print(f"No valid data to write to CSV for file {input_file}.")
 
@@ -131,6 +134,7 @@ def process_json_files(directory):
         error_csv_file = os.path.join(directory, f"finalerrorfile_{i}.csv")
         results_df.write_csv(error_csv_file)
         print(f"Error-only CSV file created for {input_file} as {error_csv_file}")
+
 
 # Example usage
 directory_path = "."  # Replace with the path to your JSON files directory

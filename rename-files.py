@@ -11,4 +11,6 @@ for file in directory.iterdir():
         if file.name != new_name:  # Ensure the name actually changes
             file.rename(new_path)
 
-print(f'Replaced "_" and whitespace with "-", and converted filenames to lowercase in {directory}')
+print(
+    f'Replaced "_" and whitespace with "-", and converted filenames to lowercase in {directory}'
+)

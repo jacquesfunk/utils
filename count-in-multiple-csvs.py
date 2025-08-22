@@ -27,7 +27,7 @@ Update files with specific prefix
 #                     print(f"Processed file: {file.name}, Records: {file_record_count}")
 #             except Exception as e:
 #                 print(f"Error processing file {file.name}: {e}")
-    
+
 #     return total_record_count, total_files_processed
 
 # # Example usage
@@ -39,14 +39,15 @@ Update files with specific prefix
 
 # single file
 # Example usage
-directory = r'C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\checks'  # Current directory
-filename_prefix = 'cadence'
+directory = r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\checks"  # Current directory
+filename_prefix = "cadence"
 total_records, files_processed = count_records_in_csv_files(directory, filename_prefix)
-print(f'Total number of records (excluding headers): {total_records}')
-print(f'Total number of files processed: {files_processed}')
+print(f"Total number of records (excluding headers): {total_records}")
+print(f"Total number of files processed: {files_processed}")
 
 from pathlib import Path
 import csv
+
 
 def count_records_in_csv_files(directory):
     total_record_count = 0
@@ -72,6 +73,7 @@ def count_records_in_csv_files(directory):
                 print(f"Error processing file {file.name}: {e}")
 
     return total_record_count, total_files_processed
+
 
 # Example usage
 directory = r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\checks"  # Current directory

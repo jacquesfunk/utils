@@ -14,8 +14,8 @@ dforig = pl.read_csv(file)
 df = dforig.unique(subset=["Process", "Warehouse Column"])
 
 # Save the DataFrame with unique records to a new CSV file
-df.write_csv(f'{filename}_uniques.csv')
+df.write_csv(f"{filename}_uniques.csv")
 
 print(len(df))
 
-print('Done')
+print("Done")

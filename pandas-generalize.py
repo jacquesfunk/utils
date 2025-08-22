@@ -1,7 +1,8 @@
 import pandas as pd
 
+
 def generalize(ser, match_name, default=None, regex=False, case=False):
-    """ Search a series for text matches.
+    """Search a series for text matches.
     Based on code from https://www.metasnake.com/blog/pydata-assign.html
 
     ser: pandas series to search
@@ -21,6 +22,6 @@ def generalize(ser, match_name, default=None, regex=False, case=False):
             seen = mask
         else:
             seen |= mask
-            
+
         if is_cat and name not in ser.cat.categories:
             ser = ser.cat.add_categories(name)

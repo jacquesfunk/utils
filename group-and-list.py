@@ -1,15 +1,17 @@
 import pandas as pd
 
 # Read the v2 file (target for update)
-df_v2 = pd.read_csv(r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\password-rotation-source-v2.csv")
+df_v2 = pd.read_csv(
+    r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\password-rotation-source-v2.csv"
+)
 # Read the source file (provides Rotation Deadline)
-df_src = pd.read_csv(r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\password-rotation-source.csv")
+df_src = pd.read_csv(
+    r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\password-rotation-source.csv"
+)
 
 # Merge Rotation Deadline into v2 using PasswordID as key
 df_v2 = df_v2.merge(
-    df_src[["PasswordID", "Rotation Deadline"]],
-    on="PasswordID",
-    how="left"
+    df_src[["PasswordID", "Rotation Deadline"]], on="PasswordID", how="left"
 )
 
 # Update the 'Current Deadline' column in v2 with the value from 'Rotation Deadline'

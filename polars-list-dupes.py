@@ -13,25 +13,27 @@ files_list = [
     )
 ]
 
+
 # Define the function to process each file
 def process_file(file_path, key_field):
     try:
         # Read the CSV file into a Polars DataFrame
         df = pl.read_csv(file_path)
-        
+
         # Calculate value counts for the key field
         value_counts = df[key_field].value_counts(sort=True)
-        
+
         # Print results to console
-        print(f'File: {file_path}')
-        print('Value counts:')
+        print(f"File: {file_path}")
+        print("Value counts:")
         print(value_counts)
-        print('\n' + '-'*40 + '\n')
-        
+        print("\n" + "-" * 40 + "\n")
+
         return df
     except Exception as e:
-        print(f'An error occurred while processing the file {file_path}: {e}')
+        print(f"An error occurred while processing the file {file_path}: {e}")
         return None
+
 
 # Initialize an empty DataFrame
 result_df = None
@@ -46,12 +48,14 @@ for file, key in files_list:
             result_df = result_df.concat(df)
 
 if result_df is not None:
-    ticket_number = '5121'
-    output_filename = f"DS{ticket_number}_{current_date.strftime('%Y%m%d%H%M%S')}_output.csv"
+    ticket_number = "5121"
+    output_filename = (
+        f"DS{ticket_number}_{current_date.strftime('%Y%m%d%H%M%S')}_output.csv"
+    )
 
     # Filter the DataFrame to keep only duplicate records based on the 'id' column
     dupes_df = result_df.filter(pl.col("dataset_name").is_duplicated())
-    
+
     # Select specific columns to include in the output
     columns_to_include = [
         "dataset_id",
@@ -59,9 +63,12 @@ if result_df is not None:
         "dataset_name",
     ]  # Replace with your desired columns
     final_df = dupes_df.select(columns_to_include)
-    
+
     final_df_sorted = final_df.sort(
-        ["dataset_name",], descending=False
+        [
+            "dataset_name",
+        ],
+        descending=False,
     )
 
     # Save the resulting DataFrame to a CSV file

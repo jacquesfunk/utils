@@ -2,21 +2,22 @@ import pandas as pd
 import json
 
 # Load the CSV file
-file_path = r'C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\exceptionlist_2024_06_20_ryan_extracted.csv'
+file_path = r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\exceptionlist_2024_06_20_ryan_extracted.csv"
 df = pd.read_csv(file_path)
+
 
 # Function to recursively flatten nested JSON fields
 def flatten_json(y):
     out = {}
 
-    def flatten(x, name=''):
+    def flatten(x, name=""):
         if type(x) is dict:
             for a in x:
-                flatten(x[a], name + a + '_')
+                flatten(x[a], name + a + "_")
         elif type(x) is list:
             i = 0
             for a in x:
-                flatten(a, name + str(i) + '_')
+                flatten(a, name + str(i) + "_")
                 i += 1
         else:
             out[name[:-1]] = x
@@ -24,19 +25,21 @@ def flatten_json(y):
     flatten(y)
     return out
 
+
 # Function to extract nested arrays and add them as new fields
 def extract_nested_arrays(row, field_name):
     try:
         data = json.loads(row[field_name])
         flattened_data = flatten_json(data)
         for key, value in flattened_data.items():
-            row[f'{field_name}_{key}'] = value
+            row[f"{field_name}_{key}"] = value
     except (json.JSONDecodeError, TypeError):
         pass
     return row
 
+
 # Apply the function to extract nested arrays in Hubtek fields
-df = df.apply(lambda row: extract_nested_arrays(row, 'pickup'), axis=1)
+df = df.apply(lambda row: extract_nested_arrays(row, "pickup"), axis=1)
 # df = df.apply(lambda row: extract_nested_arrays(row, 'additional_data'), axis=1)
 
 # Apply the function to extract nested arrays in DBX fields
@@ -76,7 +79,9 @@ min_fields = df.apply(lambda row: row.count(), axis=1).min()
 max_fields = df.apply(lambda row: row.count(), axis=1).max()
 
 # Write the updated DataFrame to a new CSV file
-output_file = r'C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\hubtek_exceptions_extracted.csv'
+output_file = (
+    r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\hubtek_exceptions_extracted.csv"
+)
 df.to_csv(output_file, index=False)
 
 print(f"Updated CSV written to {output_file}")

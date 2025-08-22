@@ -2,7 +2,7 @@ import polars as pl
 
 # Set df column as list
 # Read the CSV file into a DataFrame
-df = pl.read_csv('DS4013_20240607134926_output.csv')
+df = pl.read_csv("DS4013_20240607134926_output.csv")
 
 # Extract the "id" column as a list
 strings_list = df["factorsoft_client_number__c"].to_list()
@@ -24,11 +24,15 @@ result = ", ".join(strings_list)
 
 # Group strings into groups of 40
 group_size = 40
-groups = [strings_list[i:i+group_size] for i in range(0, len(strings_list), group_size)]
+groups = [
+    strings_list[i : i + group_size] for i in range(0, len(strings_list), group_size)
+]
 
 # Split the list of files into groups of size 'group_size'
-file_groups = [strings_list[i:i+group_size] for i in range(0, len(strings_list), group_size)]
+file_groups = [
+    strings_list[i : i + group_size] for i in range(0, len(strings_list), group_size)
+]
 
 # Print each group to the console
 for i, group in enumerate(groups):
-    print(f"Group {i+1}: {', '.join(group)}")
+    print(f"Group {i + 1}: {', '.join(group)}")

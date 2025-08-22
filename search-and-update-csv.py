@@ -16,9 +16,7 @@ print("\nUpdated Rows:")
 print(updated_rows)
 
 # Save the updated DataFrame back to a CSV file
-output_file = (
-    r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\password-update.csv"
-)
+output_file = r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads\password-update.csv"
 df.to_csv(output_file, index=False)
 
 print(f"Modified CSV written to {output_file}")

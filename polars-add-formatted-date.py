@@ -5,10 +5,12 @@ from datetime import datetime as dt
 # SAL8959
 
 # Get the current date
-current_date = dt.now().strftime("%Y%m%d")  # Format the date to avoid invalid characters
+current_date = dt.now().strftime(
+    "%Y%m%d"
+)  # Format the date to avoid invalid characters
 
 # Your file path
-file = 'DS3928-20240624.csv'
+file = "DS3928-20240624.csv"
 
 filename = os.path.splitext(os.path.basename(file))[0]
 
@@ -16,9 +18,7 @@ filename = os.path.splitext(os.path.basename(file))[0]
 dforig = pl.read_csv(file)
 
 # Convert the 'createddate' column to datetime
-df = dforig.with_columns(
-   pl.col("createddate").str.to_datetime("%Y-%m-%d %H:%M:%S.%f")
-)
+df = dforig.with_columns(pl.col("createddate").str.to_datetime("%Y-%m-%d %H:%M:%S.%f"))
 
 # Add a new column with the formatted date
 df = df.with_columns(
@@ -32,7 +32,7 @@ df = df.drop("createddate")
 df_filtered = df.filter("formatted_createddate" > "2024-02-01")
 
 # Sort by the new formatted date column
-df_sorted = df_filtered.sort(['formatted_createddate'], descending=True)
+df_sorted = df_filtered.sort(["formatted_createddate"], descending=True)
 
 # Write the sorted DataFrame to a new CSV file
 df_sorted.write_csv("20240624ContractIssues.csv")

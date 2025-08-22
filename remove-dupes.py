@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 # Input string
 input_string = """133853MASTER
 150799MASTER
@@ -104,7 +102,7 @@ input_string = """133853MASTER
 102336REC"""
 
 # Split the string into a list of words
-words = input_string.split('\n')
+words = input_string.split("\n")
 
 # Initialize a set to keep track of seen words and a list for removed duplicates
 seen = set()
@@ -120,7 +118,7 @@ for word in words:
         removed_duplicates.append(word)
 
 # Join the unique words back into a single string with each word on a new line
-output_string = '\n'.join(unique_words)
+output_string = "\n".join(unique_words)
 
 # Print the unique words, the removed duplicates, and their counts
 print("Unique records:")
@@ -128,5 +126,5 @@ print(output_string)
 print(f"\nCount of unique records: {len(unique_words)}")
 
 print("\nRemoved duplicates:")
-print('\n'.join(removed_duplicates))
+print("\n".join(removed_duplicates))
 print(f"\nCount of removed duplicates: {len(removed_duplicates)}")

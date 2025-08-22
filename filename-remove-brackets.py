@@ -10,7 +10,9 @@ if directory.is_dir():
         if file.is_file():  # Only process files
             # Remove text within brackets (and the brackets themselves)
             new_name = re.sub(r"\[.*?\]", "", file.name)
-            new_name = re.sub(r"\(.*?\)", "", new_name)  # Optionally handle parentheses as well
+            new_name = re.sub(
+                r"\(.*?\)", "", new_name
+            )  # Optionally handle parentheses as well
             new_name = new_name.strip()  # Remove leading/trailing whitespace
 
             # Rename the file if the name has changed

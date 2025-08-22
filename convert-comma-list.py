@@ -66,9 +66,11 @@ aeef7bff-4c85-49ad-9cf2-5efa741a2305
 13742130-696b-4816-a020-f918c4464bed
 """
 
+
 def copy2clip(txt):
-    cmd='echo '+txt.strip()+'|clip'
+    cmd = "echo " + txt.strip() + "|clip"
     return subprocess.check_call(cmd, shell=True)
+
 
 # # Split the input into a list of strings without quotes around each item
 # strings_list = input_string.strip().split("\n")

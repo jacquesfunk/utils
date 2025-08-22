@@ -11,14 +11,14 @@ date_str = datetime.now().strftime("%Y%m%d")
 name_mapping = {
     f"COLUMNS-{date_str}.csv": f"sql-COLUMNS-{date_str}.csv",
     f"columns-{date_str}.csv": f"pg-columns-{date_str}.csv",
-    f"svv_columns-{date_str}.csv": f"rs-svv_columns-{date_str}.csv"
+    f"svv_columns-{date_str}.csv": f"rs-svv_columns-{date_str}.csv",
 }
 
 # Iterate through the dictionary and rename files
 for old_name, new_name in name_mapping.items():
     old_file = directory / old_name
     new_file = directory / new_name
-    
+
     # Check if the old file exists before renaming
     if old_file.exists():
         old_file.rename(new_file)

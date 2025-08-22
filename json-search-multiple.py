@@ -1,6 +1,7 @@
 from pathlib import Path
 import json
 
+
 def search_json_files(directory, search_string):
     found_json = False  # Flag to track if any JSON files are found
     found_match = False  # Flag to track if any match is found
@@ -9,10 +10,10 @@ def search_json_files(directory, search_string):
     directory_path = Path(directory)
 
     # Walk through the directory and subdirectories
-    for file_path in directory_path.rglob('*.json'):  # Find all JSON files recursively
+    for file_path in directory_path.rglob("*.json"):  # Find all JSON files recursively
         found_json = True
         try:
-            with file_path.open('r', encoding='utf-8') as f:
+            with file_path.open("r", encoding="utf-8") as f:
                 # Read the entire content of the file
                 file_content = f.read()
                 # Find all valid JSON substrings in the content
@@ -24,15 +25,22 @@ def search_json_files(directory, search_string):
                             # If data is a dictionary
                             for key, value in data.items():
                                 if isinstance(value, str) and search_string in value:
-                                    print(f"Found '{search_string}' in '{key}' column of file: {file_path}")
+                                    print(
+                                        f"Found '{search_string}' in '{key}' column of file: {file_path}"
+                                    )
                                     found_match = True
                         elif isinstance(data, list):
                             # If data is a list
                             for item in data:
                                 if isinstance(item, dict):
                                     for key, value in item.items():
-                                        if isinstance(value, str) and search_string in value:
-                                            print(f"Found '{search_string}' in '{key}' column of file: {file_path}")
+                                        if (
+                                            isinstance(value, str)
+                                            and search_string in value
+                                        ):
+                                            print(
+                                                f"Found '{search_string}' in '{key}' column of file: {file_path}"
+                                            )
                                             found_match = True
                     except json.JSONDecodeError:
                         # Skip over non-JSON parts of the file
@@ -44,6 +52,7 @@ def search_json_files(directory, search_string):
         print("No JSON files in directory")
     elif not found_match:
         print("Search term not found")
+
 
 # Example usage
 search_directory = "."  # Current directory

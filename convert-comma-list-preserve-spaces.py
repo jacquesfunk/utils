@@ -19,9 +19,11 @@ strings_list = input_string.split("\n")
 formatted_list = [f"'{name}'" for name in strings_list if name.strip()]
 result = ", ".join(formatted_list)
 
+
 def copy2clip(txt):
-    cmd = 'echo ' + txt.strip() + '| clip'
+    cmd = "echo " + txt.strip() + "| clip"
     return subprocess.check_call(cmd, shell=True)
+
 
 print(result)
 # Copy the formatted string to the clipboard

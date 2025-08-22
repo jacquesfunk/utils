@@ -2,18 +2,18 @@ from pathlib import Path
 import shutil
 
 # Define folder paths
-source_dir = Path('C:/Users/YourName/Downloads')
+source_dir = Path("C:/Users/YourName/Downloads")
 dest_dirs = {
-    'Documents': Path('C:/Users/YourName/Documents'),
-    'Images': Path('C:/Users/YourName/Pictures'),
+    "Documents": Path("C:/Users/YourName/Documents"),
+    "Images": Path("C:/Users/YourName/Pictures"),
 }
 
 # Map file extensions to their respective folder
 file_type_mapping = {
-    '.pdf': 'Documents',
-    '.docx': 'Documents',
-    '.jpg': 'Images',
-    '.png': 'Images',
+    ".pdf": "Documents",
+    ".docx": "Documents",
+    ".jpg": "Images",
+    ".png": "Images",
 }
 
 # Organize files

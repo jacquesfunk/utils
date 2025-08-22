@@ -13,6 +13,7 @@ def compare_strings(str1, str2):
         for j in range(len(words1), len(words2)):
             print(f"Additional word in String 2 (word {j + 1}): {words2[j]}")
 
+
 # Example usage
 string1 = """{
     "Factorsoft_Client_Number__c": "138019REC",

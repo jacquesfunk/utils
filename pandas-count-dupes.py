@@ -23,5 +23,6 @@ def main():
     df1_id_dupes = len(df1["dotnbr"]) - len(df1["dotnbr"].drop_duplicates())
     print(f"Number of duplicates: {df1_id_dupes}")
 
+
 if __name__ == "__main__":
     main()

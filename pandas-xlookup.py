@@ -1,9 +1,7 @@
 import pandas as pd
 import csv
 
-df1 = pd.read_excel(
-    "file.xlsx", sheet_name="Master File"
-)
+df1 = pd.read_excel("file.xlsx", sheet_name="Master File")
 df2 = pd.read_csv("file.csv")
 
 
@@ -19,9 +17,7 @@ def xlookup(lookup_value, lookup_array, return_array, if_not_found: str = None):
 
 df1 = df1[df1["lookup"].notna()]
 
-df1["return"] = df1["lookup"].apply(
-    xlookup, args=(df2["lookup"], df2["returnmatch"])
-)
+df1["return"] = df1["lookup"].apply(xlookup, args=(df2["lookup"], df2["returnmatch"]))
 
 columns = ["lookup", "return"]
 
@@ -32,4 +28,3 @@ with open("users.csv", "w", newline="") as f:
         if pd.isnull(row["return"]):
             continue  # skip row if Bundle Type is null
         writer.writerow([row["lookup"], row["return"]])
-

@@ -1,11 +1,12 @@
 import pandas as pd
 
+
 def align_schemas(dfs):
     # Get all unique column names from all dataframes
     all_columns = set()
     for df in dfs:
         all_columns.update(df.columns)
-    
+
     # Create a list of columns with their types from all dataframes
     aligned_dfs = []
     for df in dfs:
@@ -16,8 +17,9 @@ def align_schemas(dfs):
         # Ensure columns are in the same order
         df = df[sorted(all_columns)]
         aligned_dfs.append(df)
-    
+
     return aligned_dfs
+
 
 def count_total_rows_and_combine(file_paths, output_file):
     dfs = [pd.read_csv(file_path) for file_path in file_paths]
@@ -27,12 +29,14 @@ def count_total_rows_and_combine(file_paths, output_file):
     combined_df.to_csv(output_file, index=False)
     return total_rows
 
+
 def print_results(total_rows, sorted_columns, counts, title):
     print(f"Total rows: {total_rows}")
     print(f"{title}:")
     for column in sorted_columns:
         print(f"{column}: {counts[column]}")
     print()
+
 
 # Example usage
 file_paths = [

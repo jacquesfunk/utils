@@ -1,4 +1,4 @@
-s = 'abcde'
+s = "abcde"
 
 print(len(s))
 # 5

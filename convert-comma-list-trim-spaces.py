@@ -15,16 +15,18 @@ input_string = """15B9B3277C38460ABA2427B23C04FD6D
 """
 
 # Trim the whitespace from each line and join with commas
-trimmed_string = ','.join(line.strip() for line in input_string.strip().splitlines())
+trimmed_string = ",".join(line.strip() for line in input_string.strip().splitlines())
 
 # Split the input into a list of strings with single quotes around each item
 strings_list = input_string.strip().split("\n")
 formatted_list = [f"'{name.strip()}'" for name in strings_list]
 result = ", ".join(formatted_list)
 
+
 def copy2clip(txt):
-    cmd = 'echo ' + txt.strip() + '| clip'
+    cmd = "echo " + txt.strip() + "| clip"
     return subprocess.check_call(cmd, shell=True)
+
 
 print(result)
 # Copy the formatted string to the clipboard

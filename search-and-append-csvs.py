@@ -2,11 +2,13 @@ import pandas as pd
 import os
 import glob
 
+
 # Function to convert all columns to strings
 def convert_to_strings(df):
     for col in df.columns:
         df[col] = df[col].astype(str)
     return df
+
 
 # Folder containing the CSV files
 folder_path = r"C:\Users\mahmad\OneDrive - Ryan RTS\Downloads"

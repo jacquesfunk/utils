@@ -16,14 +16,15 @@ df = spark.createDataFrame(data, ["text_column"])
 split_df = df.withColumn("split_column", split(col("text_column"), ", "))
 
 # Expand the 'split_column' into separate columns
-expanded_df = split_df \
-    .withColumn("col_1", col("split_column").getItem(0)) \
-    .withColumn("col_2", col("split_column").getItem(1)) \
-    .withColumn("col_3", col("split_column").getItem(2)) \
+expanded_df = (
+    split_df.withColumn("col_1", col("split_column").getItem(0))
+    .withColumn("col_2", col("split_column").getItem(1))
+    .withColumn("col_3", col("split_column").getItem(2))
     .drop("split_column")
+)
 
 # Define the output filename
-ticket_number = 'insert Jira number here'
+ticket_number = "insert Jira number here"
 output_filename = f"DS{ticket_number}_{current_date}_output.csv"
 
 # Save the resulting DataFrame to a CSV file

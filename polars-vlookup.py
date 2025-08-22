@@ -5,7 +5,9 @@ from datetime import datetime as dt
 current_date = dt.now()
 
 # Read the CSV files
-df1 = pl.read_csv(r"C:\Users\mahmad\OneDrive - Ryan RTS\Code\powerbi-research-rework.csv")
+df1 = pl.read_csv(
+    r"C:\Users\mahmad\OneDrive - Ryan RTS\Code\powerbi-research-rework.csv"
+)
 df2 = pl.read_csv(r"C:\Users\mahmad\OneDrive - Ryan RTS\Code\rs_unique.csv")
 
 # Rename the column in df2 to match df1
@@ -45,4 +47,4 @@ result = result.sort("Sort", "Views (L90D)", descending=[False, True])
 print(result)
 
 # Write the result to a CSV file
-result.write_csv('new-pbi-research.csv')
+result.write_csv("new-pbi-research.csv")

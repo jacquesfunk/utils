@@ -2,11 +2,11 @@ import json
 import pprint
 
 json_data = None
-with open('fuel_details_20240522210404437203.json', 'r') as f:
+with open("fuel_details_20240522210404437203.json", "r") as f:
     # Skip the first two lines
     lines = f.readlines()[2:]
     # Join the remaining lines into a single string
-    data = ''.join(lines).strip()
+    data = "".join(lines).strip()
 
     try:
         json_data = json.loads(data)

@@ -11,7 +11,10 @@ split_df = df.with_columns(
 # Expand the split_column into separate columns
 expanded_df = split_df.with_columns(
     [
-        pl.col("split_column").arr.eval(pl.element().alias(f"col_{i+1}")).arr.explode() for i in range(2)
+        pl.col("split_column")
+        .arr.eval(pl.element().alias(f"col_{i + 1}"))
+        .arr.explode()
+        for i in range(2)
     ]
 ).drop("split_column")
 

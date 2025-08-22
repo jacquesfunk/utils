@@ -1,6 +1,5 @@
 import subprocess
 from pathlib import Path
-import pandas as pd
 
 
 def run_script(script_name):

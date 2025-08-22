@@ -52,6 +52,4 @@ print(f"Number of dropped records: {dropped_count}")
 identifier = "DS5088"
 df_sorted.to_csv(f"{identifier}_all_records.csv", index=False)
 
-print(
-    "CSV files have been successfully appended"
-)
+print("CSV files have been successfully appended")

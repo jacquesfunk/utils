@@ -1,12 +1,13 @@
 import json
 
+
 def count_records_in_json(file_path):
     record_count = 0
     skipped_count = 0
 
     try:
         # Open the file and read line by line
-        with open(file_path, 'r') as file:
+        with open(file_path, "r") as file:
             for line in file:
                 try:
                     # Attempt to parse each line as JSON
@@ -18,7 +19,7 @@ def count_records_in_json(file_path):
                 except json.JSONDecodeError:
                     # Increment the skip count for invalid JSON lines
                     skipped_count += 1
-        
+
         return record_count, skipped_count
 
     except FileNotFoundError:
@@ -28,7 +29,8 @@ def count_records_in_json(file_path):
 
     return 0, 0  # Return 0 for both counts if there was an error
 
+
 # Load the JSON file
-file_path = 'pipeline_errors2.json'
+file_path = "pipeline_errors2.json"
 record_count = count_records_in_json(file_path)
-print(f'Total number of records: {record_count}')
+print(f"Total number of records: {record_count}")

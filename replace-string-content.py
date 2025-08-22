@@ -15,11 +15,13 @@ input_strings = [
     "0 as moteltotal,",
     "0 as scalestotal,",
     "0 as wash,",
-    "0 as meals,"
+    "0 as meals,",
 ]
 
 # Remove '0 as', ',', and double quotes from each string
-cleaned_strings = [s.replace('0 as ', '').replace(',', '').replace('"', '') for s in input_strings]
+cleaned_strings = [
+    s.replace("0 as ", "").replace(",", "").replace('"', "") for s in input_strings
+]
 
 # Sort the cleaned strings in alphabetical order
 cleaned_strings.sort()

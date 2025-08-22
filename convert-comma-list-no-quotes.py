@@ -13,9 +13,11 @@ input_string = """4532163
 4694608
 """
 
+
 def copy2clip(txt):
-    cmd='echo '+txt.strip()+'|clip'
+    cmd = "echo " + txt.strip() + "|clip"
     return subprocess.check_call(cmd, shell=True)
+
 
 # Split the input into a list of strings without quotes around each item
 strings_list = input_string.strip().split("\n")

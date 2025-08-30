@@ -1,1 +1,0 @@
-FLOOR((NOW() - CREATED_DATE) * 24)

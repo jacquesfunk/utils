@@ -1,1 +1,0 @@
-get-childitem -recurse -Filter *.py | where-object { $_.lastwritetime -gt (get-date).addHours(-100) }

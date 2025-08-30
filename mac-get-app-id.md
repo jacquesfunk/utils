@@ -1,1 +1,0 @@
-osascript -e 'id of app "PyCharm"'
